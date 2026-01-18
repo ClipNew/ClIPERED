@@ -4,15 +4,60 @@ window.addEventListener("load", () => {
 
     // --- OBSERVERS & INITIALIZERS ---
     // --- INITIALIZE ALL PAGE FUNCTIONS ---
+    loadComponents(); // Must run before other initializers that depend on component content
+    initMobileNav();
     initModal();
     initVideoModal();
     initSmoothScroll();
     initFooter();
     initBackToTopButton();
+    initScrollAnimations();
 
     // Hide preloader
     const preloader = document.getElementById('preloader');
     if (preloader) preloader.classList.add('loaded');
+
+    function initMobileNav() {
+        const toggleBtn = document.querySelector('.mobile-nav-toggle');
+        const navLinksWrapper = document.querySelector('.nav-links-wrapper');
+        if (!toggleBtn || !navLinksWrapper) return;
+
+        toggleBtn.addEventListener('click', () => {
+            const isOpened = toggleBtn.getAttribute('aria-expanded') === 'true';
+            toggleBtn.setAttribute('aria-expanded', !isOpened);
+            document.body.classList.toggle('mobile-nav-open');
+        });
+
+        // Close menu when a link is clicked
+        navLinksWrapper.addEventListener('click', (e) => {
+            if (e.target.tagName === 'A') {
+                toggleBtn.setAttribute('aria-expanded', 'false');
+                document.body.classList.remove('mobile-nav-open');
+            }
+        });
+
+        // Keyboard accessibility: close with Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && document.body.classList.contains('mobile-nav-open')) {
+                toggleBtn.setAttribute('aria-expanded', 'false');
+                document.body.classList.remove('mobile-nav-open');
+            }
+        });
+
+        // Trap focus inside the mobile menu when it's open
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Tab' && document.body.classList.contains('mobile-nav-open')) {
+                const focusableElements = navLinksWrapper.querySelectorAll('a[href]');
+                const firstElement = focusableElements[0];
+                const lastElement = focusableElements[focusableElements.length - 1];
+
+                if (!e.shiftKey && document.activeElement === lastElement) {
+                    firstElement.focus();
+                    e.preventDefault();
+                }
+            }
+        });
+    }
 
     function initModal() {
         const modal = document.getElementById('contact-modal');
@@ -134,6 +179,36 @@ window.addEventListener("load", () => {
         });
     }
 
+    function initActiveNavOnScroll() {
+        const sections = document.querySelectorAll('section[id]');
+        const navLinks = document.querySelectorAll('.nav-links a[href^="/index.html#"]');
+
+        if (!sections.length || !navLinks.length) return;
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const id = entry.target.getAttribute('id');
+                    
+                    // Remove active class from all links
+                    navLinks.forEach(link => {
+                        link.classList.remove('active');
+                    });
+
+                    // Add active class to the matching link
+                    const activeLink = document.querySelector(`.nav-links a[href$="#${id}"]`);
+                    if (activeLink) {
+                        activeLink.classList.add('active');
+                    }
+                }
+            });
+        }, {
+            rootMargin: '-50% 0px -50% 0px' // Triggers when the section is in the middle of the viewport
+        });
+
+        sections.forEach(section => observer.observe(section));
+    }
+
     function initBackToTopButton() {
         const backToTopButton = document.getElementById('back-to-top');
         if (!backToTopButton) return;
@@ -160,6 +235,23 @@ window.addEventListener("load", () => {
     function initFooter() {
         const yearSpan = document.getElementById('copyright-year');
         if (yearSpan) yearSpan.textContent = new Date().getFullYear();
+        initActiveNavOnScroll(); // Call here to ensure it runs after components are loaded
+    }
+
+    function initScrollAnimations() {
+        const animatedElements = document.querySelectorAll('.animate');
+        if (!animatedElements.length) return;
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+
+        animatedElements.forEach(el => observer.observe(el));
     }
 
     // --- FORM HANDLING ---
@@ -202,4 +294,20 @@ window.addEventListener("load", () => {
             });
     }
 
+    // --- DYNAMIC COMPONENT LOADING ---
+    async function loadComponents() {
+        const containers = document.querySelectorAll('[data-component-container]');
+        for (const container of containers) {
+            const componentName = container.dataset.componentContainer;
+            try {
+                const response = await fetch(`/components/${componentName}.html`);
+                if (!response.ok) throw new Error(`Component not found: ${componentName}`);
+                const html = await response.text();
+                container.innerHTML = html;
+            } catch (error) {
+                container.innerHTML = `<p style="color: red;">Error loading ${componentName}: ${error.message}</p>`;
+                console.error(error);
+            }
+        }
+    }
 });

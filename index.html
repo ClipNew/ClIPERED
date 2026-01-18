@@ -11,28 +11,14 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-
+    <div id="top"></div>
     <!-- Preloader -->
     <div id="preloader">
         <div class="spinner"></div>
     </div>
 
-    <div class="legal-banner">
-        <div class="container">
-            <p><i class="fas fa-shield-halved"></i> <strong>IMPORTANT NOTICE:</strong> This is a technology consulting service. We are NOT a recruitment agency and do not engage in recruitment activities.</p>
-        </div>
-    </div>
-
-    <nav class="main-nav container">
-        <a href="#" class="nav-logo">CLIPERED</a>
-        <div class="nav-links">
-            <a href="#story">About</a>
-            <a href="#project">Portfolio</a>
-            <a href="#pricing">Services</a>
-            <a href="#faq">FAQ</a>
-        </div>
-        <a href="https://wa.me/639603780196" target="_blank" rel="noopener noreferrer" class="btn btn-blue nav-cta">Work With Me</a>
-    </nav>
+    <!-- Navigation will be loaded here by script.js -->
+    <div data-component-container="nav"></div>
 
     <header class="hero container">
         <div class="hero-badge">9+ YEARS RECRUITMENT MASTERY</div>
@@ -67,34 +53,49 @@
             <p class="section-subtitle">I transform agencies by implementing a proven three-phase digital infrastructure. This is how we turn chaos into a predictable, scalable system.</p>
             <div class="strategy-grid">
                 <!-- Phase 1: Attract -->
-                <div class="strategy-card">
+                <div class="strategy-card phase-1">
                     <div class="strategy-header">
+                        <div class="strategy-icon-wrapper"><i class="fas fa-bullseye strategy-icon"></i></div>
                         <span class="strategy-phase">Phase 01</span>
                         <h3>Attract: High-Volume Lead Generation</h3>
                     </div>
-                    <p>We stop relying on walk-ins and build a powerful engine to attract qualified candidates. This involves creating high-conversion landing pages and running targeted Meta (Facebook) Ad campaigns that reach the right audience, 24/7.</p>
+                    <ul class="strategy-details">
+                        <li><i class="fas fa-check"></i><span>Run targeted Meta ad campaigns.</span></li>
+                        <li><i class="fas fa-check"></i><span>Build high-conversion landing pages.</span></li>
+                        <li><i class="fas fa-check"></i><span>Implement pixel tracking for audience retargeting.</span></li>
+                    </ul>
                     <div class="strategy-tools">
                         <strong>Tools:</strong> Meta Ads Manager, High-Conversion Landing Pages, Pixel Tracking
                     </div>
                 </div>
                 <!-- Phase 2: Engage -->
-                <div class="strategy-card">
+                <div class="strategy-card phase-2">
                     <div class="strategy-header">
+                        <div class="strategy-icon-wrapper"><i class="fas fa-robot strategy-icon"></i></div>
                         <span class="strategy-phase">Phase 02</span>
                         <h3>Engage: Automated Screening & Scheduling</h3>
                     </div>
-                    <p>We eliminate manual screening by deploying intelligent chatbots (Chatmaxima/ManyChat) that ask qualifying questions, answer FAQs, and automatically schedule interviews with the best candidates using tools like Calendly.</p>
+                    <ul class="strategy-details">
+                        <li><i class="fas fa-check"></i><span>Deploy chatbots to pre-screen candidates 24/7.</span></li>
+                        <li><i class="fas fa-check"></i><span>Automate answers to frequently asked questions.</span></li>
+                        <li><i class="fas fa-check"></i><span>Integrate automated interview scheduling.</span></li>
+                    </ul>
                     <div class="strategy-tools">
                         <strong>Tools:</strong> Chatmaxima, ManyChat, Calendly, WhatsApp Automation
                     </div>
                 </div>
                 <!-- Phase 3: Manage -->
-                <div class="strategy-card">
+                <div class="strategy-card phase-3">
                     <div class="strategy-header">
+                        <div class="strategy-icon-wrapper"><i class="fas fa-table-cells strategy-icon"></i></div>
                         <span class="strategy-phase">Phase 03</span>
                         <h3>Manage: Centralized Operations Dashboard</h3>
                     </div>
-                    <p>We replace scattered spreadsheets with a single source of truth. I build live dashboards using Google Sheets, Airtable, or custom web apps to track every applicant's journey, monitor KPIs, and ensure full DMW compliance with a clear digital trail.</p>
+                    <ul class="strategy-details">
+                        <li><i class="fas fa-check"></i><span>Centralize applicant data into a single source of truth.</span></li>
+                        <li><i class="fas fa-check"></i><span>Build live dashboards to track KPIs and progress.</span></li>
+                        <li><i class="fas fa-check"></i><span>Ensure a clear digital trail for DMW compliance.</span></li>
+                    </ul>
                     <div class="strategy-tools">
                         <strong>Tools:</strong> Google Sheets, Airtable, Power Apps, Custom Web Apps
                     </div>
@@ -311,7 +312,7 @@
     </a>
 
     <!-- Back to Top Button -->
-    <a href="#" id="back-to-top" class="back-to-top-btn" aria-label="Back to top">
+    <a href="#top" id="back-to-top" class="back-to-top-btn" aria-label="Back to top">
         <i class="fas fa-arrow-up"></i>
     </a>
 
