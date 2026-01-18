@@ -673,16 +673,16 @@ section {
         grid-template-columns: repeat(2, 1fr);
     }
 
-    .skills-wrapper {
-        grid-template-columns: repeat(3, 1fr);
-    }
-
     .value-grid { 
         grid-template-columns: 1fr 1fr; 
     }
 
     .testimonial-grid { 
         grid-template-columns: 1fr 1fr; 
+    }
+
+    .strategy-grid {
+        grid-template-columns: repeat(3, 1fr);
     }
 }
 
