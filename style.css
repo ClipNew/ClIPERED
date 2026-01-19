@@ -2,16 +2,19 @@
    1. CSS Variables (Custom Properties)
    ========================================================================== */
 :root {
-    /* Dark Blue Night Theme Colors */
-    --color-primary: #3a7dff;       /* A vibrant blue for primary actions */
+    /* Clean & Dark Theme Colors */
+    --color-primary: #3a7dff;       /* A vibrant blue for primary actions and highlights */
     --color-primary-dark: #2a62d1;
-    --color-secondary: #a0b3d7;     /* Lighter blue-gray for secondary text */
+    --color-secondary: #6c757d;     /* A neutral gray for secondary text */
     --color-gold: #ffc107;
-    --color-text: #e0e5f0;          /* Main text color (light gray-blue) */
-    --color-text-light: #a0b3d7;    /* Lighter text for subtitles */
-    --color-bg: #0d1117;            /* Deep dark blue background */
-    --color-bg-light: #161b22;      /* Slightly lighter dark blue for surfaces */
-    --color-border: #30363d;
+    --color-text: #212529;          /* Dark charcoal for main text on light backgrounds */
+    --color-text-light: #6c757d;    /* Lighter gray for subtitles */
+    --color-bg: #f8f9fa;            /* Very light gray background */
+    --color-bg-light: #ffffff;      /* White for card surfaces */
+    --color-border: #dee2e6;
+    --color-card-bg: #0d1117;       /* Deep blue for card backgrounds */
+    --color-card-text: #ffffff;      /* Pure white text for cards for max contrast */
+    --color-card-secondary: #b0c4de; /* Brighter secondary text for cards */
     --color-success: #28a745;
     --color-error: #e53e3e;
 
@@ -30,7 +33,7 @@
 
     /* Borders */
     --border-radius: 0.5rem; /* 8px */
-    --box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    --box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
 /* ==========================================================================
@@ -55,13 +58,7 @@ body {
     font-weight: var(--font-weight-normal);
     line-height: 1.6;
     color: var(--color-text);
-    /* Dark night sky gradient background */
     background-color: var(--color-bg); /* Fallback color */
-    background-image: 
-        radial-gradient(circle at 15% 50%, hsla(212, 96%, 20%, 0.3) 0px, transparent 40%),
-        radial-gradient(circle at 85% 30%, hsla(280, 96%, 25%, 0.25) 0px, transparent 40%);
-    background-attachment: fixed; /* Keeps the gradient in place on scroll */
-
 }
 
 body.mobile-nav-open {
@@ -132,25 +129,12 @@ a {
 }
 
 .hero {
-    padding-top: var(--spacing-xl);
+    padding-top: calc(var(--spacing-xl) * 2);
     padding-bottom: var(--spacing-xl);
     text-align: center;
     display: flex;
     flex-direction: column;
     align-items: center;
-}
-
-.hero-badge {
-    background-color: rgba(58, 125, 255, 0.1);
-    color: var(--color-primary);
-    font-weight: var(--font-weight-bold);
-    padding: var(--spacing-xs) var(--spacing-md);
-    border-radius: 2rem;
-    font-size: 0.8rem;
-    margin-bottom: var(--spacing-md);
-    text-transform: uppercase;
-    border: 1px solid rgba(58, 125, 255, 0.2);
-    letter-spacing: 0.5px;
 }
 
 .main-nav {
@@ -178,18 +162,19 @@ a {
 }
 
 .nav-links a {
-    color: var(--color-secondary);
+    color: var(--color-card-secondary);
     font-size: 1.5rem; /* Larger font for mobile overlay */
     font-weight: 600;
     padding: var(--spacing-sm) var(--spacing-md);
     border-radius: var(--border-radius);
+    background-color: var(--color-card-bg);
     border: 1px solid var(--color-border);
     transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
 }
 
 .nav-links a:hover, .nav-links a.active {
-    color: var(--color-text);
-    background-color: var(--color-bg-light);
+    color: var(--color-card-text);
+    background-color: var(--color-primary);
     border-color: var(--color-primary);
 }
 
@@ -211,7 +196,7 @@ a {
     position: relative;
     width: 24px;
     height: 2px;
-    background-color: var(--color-text);
+    background-color: var(--color-text); /* This is for the hamburger on the top bar, which is light */
     transition: background-color 0.3s ease;
 }
 
@@ -230,18 +215,20 @@ a {
 .hamburger-icon::after { top: 8px; }
 
 /* Hamburger animation to 'X' */
-.mobile-nav-open .hamburger-icon {
+.full-menu-overlay.open .hamburger-icon {
     background-color: transparent;
 }
 
-.mobile-nav-open .hamburger-icon::before {
+.full-menu-overlay.open .hamburger-icon::before {
     top: 0;
     transform: rotate(45deg);
+    background-color: var(--color-card-text); /* Make the 'X' light */
 }
 
-.mobile-nav-open .hamburger-icon::after {
+.full-menu-overlay.open .hamburger-icon::after {
     top: 0;
     transform: rotate(-45deg);
+    background-color: var(--color-card-text); /* Make the 'X' light */
 }
 
 .mobile-nav-open .nav-cta {
@@ -284,10 +271,20 @@ a {
     border: 4px solid var(--color-bg); /* A solid border to separate from the glow */
 }
 
-.hero h1 {
+.hero h1,
+.hero-gradient-title {
     font-size: 3rem;
     font-weight: var(--font-weight-bold);
     margin-bottom: var(--spacing-sm);
+    max-width: 700px;
+}
+
+.hero-gradient-title {
+    background: linear-gradient(90deg, var(--color-text) 70%, var(--color-primary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-fill-color: transparent;
 }
 
 .hero-subtitle {
@@ -307,7 +304,7 @@ a {
 .section-title {
     font-size: 2.5rem;
     font-weight: var(--font-weight-bold);
-    text-align: center;
+    text-align: center; 
     margin-bottom: var(--spacing-sm);
     color: var(--color-text);
 }
@@ -315,7 +312,7 @@ a {
 .section-subtitle {
     font-size: 1.1rem;
     text-align: center;
-    color: var(--color-text-light);
+    color: var(--color-text-light); 
     max-width: 600px;
     margin: 0 auto var(--spacing-xl);
 }
@@ -336,22 +333,27 @@ a {
    6. Button Component
    ========================================================================== */
 .btn-blue {
-    background-color: var(--color-primary);
+    background-color: var(--color-primary-dark);
     color: #fff;
 }
 
 .btn-blue:hover {
-    background-color: var(--color-primary-dark);
+    background-color: var(--color-primary);
 }
 
 .btn-outline {
-    background-color: transparent;
-    border-color: var(--color-primary);
-    color: var(--color-text);
+    background-color: var(--color-card-bg);
+    border-color: var(--color-border);
+    color: var(--color-card-text);
+}
+
+.price-card .btn-outline, .skill-card .btn-outline {
+    color: var(--color-card-text);
+    border-color: var(--color-border);
 }
 
 .btn-outline:hover {
-    background-color: rgba(58, 125, 255, 0.1);
+    background-color: var(--color-primary);
     border-color: var(--color-primary);
 }
 
@@ -386,18 +388,16 @@ section {
 
 .project-card {
     /* Glassmorphism Effect */
-    background: rgba(22, 27, 34, 0.5); /* Dark semi-transparent background */
-    backdrop-filter: blur(10px); 
-    -webkit-backdrop-filter: blur(10px); /* For Safari */
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: var(--color-card-bg);
+    border: 1px solid var(--color-border); /* Will be overridden on hover */
 
     border-radius: var(--border-radius);
     box-shadow: var(--box-shadow);
     overflow: hidden;
     display: flex;
     flex-direction: column;
+    color: var(--color-card-secondary); /* Set default text color for the card */
     transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.2); /* Adds a subtle shadow to lift the card */
 }
 
 .project-card:hover {
@@ -422,12 +422,13 @@ section {
 .project-tag {
     font-size: 0.8rem;
     font-weight: var(--font-weight-bold);
-    color: var(--color-text-light);
+    color: var(--color-card-secondary);
     text-transform: uppercase;
     margin-bottom: var(--spacing-sm);
 }
 
 .project-info h3 {
+    color: var(--color-card-text);
     font-size: 1.5rem;
     margin-bottom: var(--spacing-sm);
 }
@@ -435,9 +436,9 @@ section {
 .stat-badge {
     display: inline-flex;
     align-items: center;
-    gap: var(--spacing-sm);
-    background-color: var(--color-bg);
-    color: var(--color-text-light);
+    gap: var(--spacing-sm); 
+    background-color: rgba(255, 255, 255, 0.05);
+    color: var(--color-card-secondary);
     padding: var(--spacing-xs) var(--spacing-sm);
     border-radius: 2rem;
     font-size: 0.9rem;
@@ -469,17 +470,21 @@ section {
     display: flex;
     align-items: center;
     gap: var(--spacing-md);
-    background: rgba(22, 27, 34, 0.5);
+    background: var(--color-card-bg);
     border: 1px solid var(--color-border);
     padding: var(--spacing-md);
     border-radius: var(--border-radius);
+}
+
+.step-card p {
+    color: var(--color-card-secondary);
 }
 
 .step-number {
     font-size: 1.5rem;
     font-weight: var(--font-weight-bold);
     color: var(--color-primary);
-    line-height: 1;
+    line-height: 1; 
 }
 
 .pricing-grid {
@@ -492,14 +497,13 @@ section {
 
 .price-card {
     /* Glassmorphism Effect */
-    background: rgba(22, 27, 34, 0.5); /* Dark semi-transparent background */
-    backdrop-filter: blur(10px); 
-    -webkit-backdrop-filter: blur(10px); /* For Safari */
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: var(--color-card-bg);
+    border: 1px solid var(--color-border); /* Will be overridden on hover */
 
     border-radius: var(--border-radius);
     padding: var(--spacing-lg);
     text-align: center;
+    color: var(--color-card-secondary); /* Set default text color for the card */
     transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
 }
 
@@ -527,22 +531,23 @@ section {
 
 .price-card .tag {
     font-weight: var(--font-weight-bold);
-    color: var(--color-text-light);
+    color: var(--color-card-secondary);
 }
 
 .price-card .tag.gold { color: var(--color-gold); }
 .price-card .tag.blue { color: var(--color-primary); }
 
 .price-val {
+    color: var(--color-card-text);
     font-size: 3rem;
     font-weight: var(--font-weight-bold);
     margin: var(--spacing-sm) 0;
 }
 
 .price-val span {
+    color: var(--color-card-secondary);
     font-size: 1rem;
     font-weight: var(--font-weight-normal);
-    color: var(--color-text-light);
 }
 
 .price-features {
@@ -551,6 +556,7 @@ section {
     display: flex;
     flex-direction: column;
     gap: var(--spacing-sm);
+    color: var(--color-card-secondary);
 }
 
 .price-features li {
@@ -571,11 +577,14 @@ section {
     gap: var(--spacing-lg);
 }
 
+.scrolly-right-pane .skills-wrapper {
+    display: grid;
+    gap: var(--spacing-lg);
+}
+
 .skill-card {
-    background: rgba(22, 27, 34, 0.5);
-    backdrop-filter: blur(10px); 
-    -webkit-backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: var(--color-card-bg);
+    border: 1px solid var(--color-border); /* Will be overridden on hover */
     border-radius: var(--border-radius);
     padding: var(--spacing-lg);
     display: flex;
@@ -590,7 +599,7 @@ section {
 }
 
 .pricing-cta-banner {
-    background: var(--color-bg-light);
+    background: var(--color-card-bg);
     border: 1px solid var(--color-border);
     border-radius: var(--border-radius);
     padding: var(--spacing-lg);
@@ -600,11 +609,12 @@ section {
     align-items: center;
     text-align: center;
     gap: var(--spacing-lg);
+    box-shadow: var(--box-shadow);
 }
 
 .pricing-cta-banner h3 {
     font-size: 1.5rem;
-    color: var(--color-text);
+    color: var(--color-card-text);
     margin-bottom: var(--spacing-sm);
 }
 
@@ -633,18 +643,19 @@ section {
 .ongoing-costs-title {
     font-size: 1.75rem;
     text-align: center;
+    color: var(--color-text);
     margin-bottom: var(--spacing-sm);
 }
 
 .costs-grid {
     display: grid;
     grid-template-columns: 1fr;
-    gap: var(--spacing-lg);
+    gap: var(--spacing-lg); 
 }
 
 .cost-item {
     text-align: center;
-    background: rgba(22, 27, 34, 0.3);
+    background: var(--color-card-bg);
     padding: var(--spacing-lg);
     border-radius: var(--border-radius);
     border: 1px solid var(--color-border);
@@ -658,11 +669,12 @@ section {
 
 .cost-item h4 {
     font-size: 1.1rem;
+    color: var(--color-card-text);
     margin-bottom: var(--spacing-sm);
 }
 
 .cost-item p {
-    color: var(--color-secondary);
+    color: var(--color-card-secondary);
 }
 
 .skill-card-header {
@@ -678,11 +690,12 @@ section {
 }
 
 .skill-card-header h3 {
+    color: var(--color-card-text);
     font-size: 1.25rem;
 }
 
 .skill-card p {
-    color: var(--color-secondary);
+    color: var(--color-card-secondary);
     flex-grow: 1;
     margin-bottom: var(--spacing-lg);
 }
@@ -695,13 +708,13 @@ section {
 
 .skill-card-note {
     font-size: 0.875rem;
-    color: var(--color-secondary);
+    color: var(--color-card-secondary);
     font-style: italic;
     align-self: center;
 }
 
 .skill-pill {
-    background-color: var(--color-bg);
+    background-color: rgba(255, 255, 255, 0.05);
     color: var(--color-text-light);
     padding: var(--spacing-xs) var(--spacing-md);
     border-radius: var(--border-radius);
@@ -713,25 +726,51 @@ section {
    10. Story Component
    ========================================================================== */
 .story-card {
-    background: rgba(22, 27, 34, 0.5); /* Dark semi-transparent background */
-    backdrop-filter: blur(10px); 
-    -webkit-backdrop-filter: blur(10px); /* For Safari */
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: var(--color-card-bg);
+    border: 1px solid var(--color-border); /* Will be overridden on hover */
     border-radius: var(--border-radius);
-    padding: var(--spacing-xl);
-    max-width: 800px;
+    padding: var(--spacing-lg);
+    max-width: 960px;
     margin: 0 auto;
     box-shadow: var(--box-shadow);
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--spacing-lg);
+    align-items: center;
+}
+
+.story-image-wrapper {
+    width: 100%;
+    max-width: 300px;
+    margin: 0 auto;
+}
+
+.story-image-wrapper img {
+    background-color: var(--color-bg-light); /* Add a light bg to the image */
+    border-radius: var(--border-radius);
+    border: 1px solid var(--color-border);
+}
+
+.story-content .section-title {
+    color: var(--color-card-text);
 }
 
 .story-content p {
     font-size: 1.1rem;
     line-height: 1.7;
-    color: var(--color-secondary);
+    color: var(--color-card-secondary);
 }
 
 .story-content p:not(:last-child) {
     margin-bottom: var(--spacing-md);
+}
+
+@media (min-width: 768px) {
+    .story-card {
+        grid-template-columns: 300px 1fr;
+        gap: var(--spacing-xl);
+        padding: var(--spacing-xl);
+    }
 }
 
 /* ==========================================================================
@@ -746,10 +785,8 @@ section {
 }
 
 .strategy-card {
-    background: rgba(22, 27, 34, 0.5);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border: 1px solid var(--color-border);
+    background: var(--color-card-bg);
+    border: 1px solid var(--color-border); /* Will be overridden on hover */
     border-radius: var(--border-radius);
     padding: var(--spacing-lg);
     position: relative;
@@ -789,6 +826,7 @@ section {
 .strategy-icon {
     font-size: 1.5rem;
     color: var(--color-primary);
+    animation: spin 15s linear infinite; /* Add a slow, continuous rotation */
 }
 
 .strategy-phase {
@@ -801,6 +839,7 @@ section {
 }
 
 .strategy-header h3 {
+    color: var(--color-card-text);
     grid-area: title;
     font-size: 1.25rem;
     margin: 0;
@@ -819,8 +858,8 @@ section {
 .strategy-details li {
     display: flex;
     align-items: center;
-    gap: var(--spacing-sm);
-    color: var(--color-secondary);
+    gap: var(--spacing-sm); 
+    color: var(--color-card-secondary);
 }
 
 .strategy-details .fa-check {
@@ -829,14 +868,14 @@ section {
 
 .strategy-tools {
     font-size: 0.9rem;
-    color: var(--color-text-light);
+    color: var(--color-card-secondary);
     border-top: 1px solid var(--color-border);
     padding-top: var(--spacing-md);
     margin-top: var(--spacing-lg);
 }
 
 .strategy-tools strong {
-    color: var(--color-text);
+    color: var(--color-card-text);
 }
 
 /* ==========================================================================
@@ -844,7 +883,7 @@ section {
    ========================================================================== */
 @media (min-width: 768px) {
     .portfolio-grid {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(3, 1fr);
     }
 
     .hero h1 {
@@ -871,10 +910,45 @@ section {
 
     .nav-links a {
         font-size: var(--font-size-base); /* Reset font size for desktop */
+        background-color: transparent;
+        color: var(--color-text);
     }
 
     .nav-cta { 
         display: inline-block; 
+    }
+    
+    /* Scrollytelling Section Styles */
+    .scrolly-section {
+        display: grid;
+        grid-template-columns: 1fr 1fr; /* Two equal columns */
+        gap: var(--spacing-xl);
+        align-items: start;
+    }
+
+    .scrolly-left-pane {
+        /* This column will contain the sticky content */
+        height: 100%; /* Ensure it has a height to work with */
+    }
+
+    .scrolly-left-pane .sticky-content {
+        position: sticky;
+        top: 100px; /* Adjust this value based on your nav height */
+    }
+
+    .scrolly-left-pane .section-title,
+    .scrolly-left-pane .section-subtitle {
+        text-align: left;
+        margin-left: 0;
+        margin-right: 0;
+    }
+
+    .scrolly-right-pane {
+        /* This column will scroll normally */
+    }
+
+    .scrolly-right-pane .skills-wrapper {
+        grid-template-columns: 1fr; /* Cards stack vertically in the right pane */
     }
 
     .price-val {
@@ -922,10 +996,10 @@ section {
     }
 
     .full-menu-overlay {
-        position: fixed;
+        position: fixed; 
         top: 0;
         left: 0;
-        width: 100%;
+        width: 100%; 
         height: 100%;
         background-color: rgba(13, 17, 23, 0.98);
         backdrop-filter: blur(10px);
@@ -955,7 +1029,7 @@ section {
 
     .full-menu-overlay .nav-links a {
         font-size: 1.5rem;
-        color: var(--color-text);
+        color: var(--color-card-text);
         padding: var(--spacing-sm) var(--spacing-lg);
     }
 
@@ -964,7 +1038,7 @@ section {
         top: var(--spacing-lg);
         right: var(--spacing-lg);
         font-size: 2rem;
-        color: var(--color-text);
+        color: var(--color-card-text);
         background: none;
         border: none;
         cursor: pointer;
@@ -1000,16 +1074,14 @@ section {
 }
 
 .blog-card, .insight-card {
-    background: rgba(22, 27, 34, 0.5);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border: 1px solid var(--color-border);
+    background: var(--color-card-bg);
+    border: 1px solid var(--color-border); /* Will be overridden on hover */
     border-radius: var(--border-radius);
     overflow: hidden;
     display: flex;
-    flex-direction: column;
+    flex-direction: column; 
     transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
-    color: var(--color-text);
+    color: var(--color-card-text);
 }
 
 .blog-card:hover, .insight-card:hover {
@@ -1021,7 +1093,7 @@ section {
 .blog-card-img, .insight-card-img {
     position: relative;
     height: 220px; /* Set a consistent height for the image container */
-    background-color: #010409; /* A very dark background to fill empty space */
+    background-color: var(--color-bg); /* A very dark background to fill empty space */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1036,6 +1108,10 @@ section {
 
 .blog-card-content, .insight-card-content {
     padding: var(--spacing-lg);
+}
+
+.insight-card-content h3 {
+    color: var(--color-card-text);
 }
 
 .blog-card-tag, .insight-card-tag {
@@ -1084,90 +1160,6 @@ section {
     }
 }
 
-@media (min-width: 992px) {
-    .portfolio-grid {
-        grid-template-columns: repeat(3, 1fr);
-    }
-
-    .partners-grid {
-        grid-template-columns: repeat(4, 1fr);
-    }
-    .partners-grid::before {
-        content: '';
-        position: absolute;
-        top: 50px;
-        left: calc(12.5% + 12px);
-        right: calc(12.5% + 12px);
-        height: 2px;
-        background: var(--color-border);
-        z-index: 1;
-    }
-}
-
-#tech-stack {
-    background: linear-gradient(180deg, rgba(22, 27, 34, 0) 0%, rgba(22, 27, 34, 0.5) 50%, rgba(22, 27, 34, 0) 100%);
-    border-top: 1px solid var(--color-border);
-    border-bottom: 1px solid var(--color-border);
-    padding-top: var(--spacing-xl);
-    padding-bottom: var(--spacing-xl);
-}
-.tech-logos {
-    margin-top: var(--spacing-xl);
-    display: flex;
-    flex-wrap: nowrap; /* Prevent wrapping */
-    gap: var(--spacing-lg);
-    overflow-x: auto; /* Allow horizontal scrolling */
-    padding-bottom: var(--spacing-md); /* Space for scrollbar */
-    justify-content: center; /* Center logos if they don't overflow */
-}
-
-.tech-logo-item {
-    flex-basis: 80px; /* Base size for logos */
-}
-
-.tech-logo-item img {
-    width: 100%;
-    height: auto;
-    padding: var(--spacing-sm);
-    background-color: rgba(255,255,255,0.05);
-    border-radius: var(--border-radius);
-    box-shadow: inset 0 0 10px rgba(0,0,0,0.2);
-    filter: grayscale(100%) opacity(0.6);
-    transition: filter 0.3s ease, transform 0.3s ease, opacity 0.3s ease;
-    animation: pulse-fade 3s infinite ease-in-out;
-}
-
-.tech-logo-item:hover img {
-    filter: grayscale(0%) opacity(1);
-    transform: scale(1.1);
-    animation-play-state: paused;
-}
-
-/* Stagger animation delays for a more organic feel */
-.tech-logo-item:nth-child(2) img { animation-delay: 0.3s; }
-.tech-logo-item:nth-child(3) img { animation-delay: 0.6s; }
-.tech-logo-item:nth-child(4) img { animation-delay: 0.1s; }
-.tech-logo-item:nth-child(5) img { animation-delay: 0.4s; }
-.tech-logo-item:nth-child(6) img { animation-delay: 0.7s; }
-.tech-logo-item:nth-child(7) img { animation-delay: 0.2s; }
-
-/* ==========================================================================
-   Partners Component
-   ========================================================================== */
-.partners-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    position: relative;
-    gap: var(--spacing-lg);
-    margin-top: var(--spacing-xl);
-}
-
-.partner-card {
-    background: rgba(22, 27, 34, 0.5);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border: 1px solid var(--color-border);
-    border-radius: var(--border-radius);
     padding: var(--spacing-lg);
     display: flex;
     flex-direction: column;
@@ -1187,21 +1179,14 @@ section {
     font-size: 2rem;
     color: var(--color-primary);
     margin-bottom: var(--spacing-sm);
-}
+}.partner-card-header h3 {
 
-.partner-card-header h3 {
-    font-size: 1.25rem;
-}
-
-.partner-card-description {
-    color: var(--color-secondary);
-    flex-grow: 1;
     margin-bottom: var(--spacing-lg);
     text-align: left;
 }
 
 .partner-card p {
-    color: var(--color-secondary);
+    color: var(--color-card-secondary);
 }
 
 .partner-card-footer {
@@ -1210,7 +1195,7 @@ section {
 
 .partner-card-note {
     font-size: 0.875rem;
-    color: var(--color-secondary);
+    color: var(--color-card-secondary);
     font-style: italic;
 }
 
@@ -1223,7 +1208,7 @@ section {
 }
 
 .post-meta {
-    color: var(--color-secondary);
+    color: var(--color-text-light);
     font-size: 0.9rem;
 }
 
@@ -1244,13 +1229,13 @@ section {
 .post-content h2 {
     font-size: 1.75rem;
     margin-top: var(--spacing-xl);
-    margin-bottom: var(--spacing-md);
+    margin-bottom: var(--spacing-md); 
     color: var(--color-primary);
 }
 
 .post-content p {
     font-size: 1.1rem;
-    line-height: 1.7;
+    line-height: 1.7; 
     color: var(--color-secondary);
     margin-bottom: var(--spacing-md);
 }
@@ -1289,22 +1274,24 @@ section {
 }
 
 .comparison-card {
+    background: var(--color-card-bg);
     border: 1px solid var(--color-border);
     border-radius: var(--border-radius);
     padding: var(--spacing-lg);
 }
 
 .comparison-card h3 {
+    color: var(--color-card-text);
     margin-bottom: var(--spacing-md);
     padding-bottom: var(--spacing-md);
     border-bottom: 1px solid var(--color-border);
 }
 
 .comparison-card.old-way {
-    border-color: var(--color-error);
+    border-left: 3px solid var(--color-error);
 }
 .comparison-card.new-way {
-    border-color: var(--color-success);
+    border-left: 3px solid var(--color-success);
 }
 
 .comparison-card ul {
@@ -1316,6 +1303,7 @@ section {
 .comparison-card li {
     display: flex;
     gap: var(--spacing-sm);
+    color: var(--color-card-secondary);
 }
 
 .insight-card-play-icon {
@@ -1352,12 +1340,11 @@ section {
    13. Footer Component
    ========================================================================== */
 .main-footer {
-    background-color: var(--color-bg-light);
-    color: var(--color-secondary);
+    background-color: var(--color-card-bg);
+    color: var(--color-card-secondary);
     padding-top: var(--spacing-xl);
-    border-top: 1px solid var(--color-border);
 }
-.footer-content {
+.footer-content { 
     display: grid;
     gap: var(--spacing-xl);
     padding-bottom: var(--spacing-xl);
@@ -1365,17 +1352,27 @@ section {
 .footer-logo {
     font-size: 1.5rem;
     font-weight: var(--font-weight-bold);
-    color: var(--color-text);
+    color: var(--color-card-text); 
     margin-bottom: var(--spacing-sm);
-}
+} 
 .brand-info p {
     max-width: 400px;
 }
 .footer-column h3 {
-    font-size: 1.1rem;
-    color: var(--color-text);
+    font-size: 1.2rem;
+    color: var(--color-card-text); 
     margin-bottom: var(--spacing-md);
+} 
+.footer-column .footer-link {
+    display: block;
+    color: var(--color-secondary);
+    margin-bottom: var(--spacing-sm);
+    transition: color 0.2s ease;
 }
+.footer-column .footer-link:hover {
+    color: var(--color-primary);
+}
+.social-links { text-align: left; }
 .social-icons {
     display: flex;
     gap: var(--spacing-md);
@@ -1389,7 +1386,7 @@ section {
     height: 40px;
     border-radius: 50%;
     background-color: transparent;
-    border: 1px solid transparent;
+    border: 1px solid var(--color-border);
     color: var(--color-secondary);
     font-size: 1.2rem;
     transition: color 0.3s ease, transform 0.3s ease, background-color 0.3s ease, border-color 0.3s ease;
@@ -1404,18 +1401,19 @@ section {
     font-size: 0.9rem;
 }
 .footer-bottom {
-    background-color: var(--color-bg);
-    padding: var(--spacing-lg) 0;
+    padding: var(--spacing-md) 0; 
     text-align: center;
-    font-size: 0.875rem;
+    font-size: 0.875rem; 
+    margin-top: var(--spacing-xl);
+    border-top: 1px solid var(--color-border);
 }
 .legal-disclaimer {
     max-width: 800px;
     margin: 0 auto var(--spacing-md);
-    line-height: 1.5;
+    line-height: 1.5; 
 }
 .copyright {
-    color: var(--color-text-light);
+    color: var(--color-card-secondary);
 }
 
 /* ==========================================================================
@@ -1445,11 +1443,11 @@ section {
 }
 
 .modal-content {
-    background: var(--color-bg-light);
+    background: var(--color-card-bg);
     padding: var(--spacing-xl);
     border-radius: var(--border-radius);
     border: 1px solid var(--color-border);
-    width: 90%;
+    width: 90%; 
     max-width: 500px;
     position: relative;
     box-shadow: var(--box-shadow);
@@ -1469,20 +1467,21 @@ section {
     position: absolute;
     top: var(--spacing-md);
     right: var(--spacing-md);
-    background: none;
+    background: none; 
     border: none;
-    color: var(--color-secondary);
+    color: var(--color-card-secondary);
     font-size: 1.5rem;
     cursor: pointer;
     line-height: 1;
 }
 
 .modal-content h2 {
+    color: var(--color-card-text);
     margin-bottom: var(--spacing-sm);
 }
 
 .modal-content p {
-    color: var(--color-secondary);
+    color: var(--color-card-secondary);
     margin-bottom: var(--spacing-lg);
 }
 
@@ -1500,15 +1499,15 @@ section {
 .form-group label {
     margin-bottom: var(--spacing-sm);
     font-size: 0.9rem;
-    color: var(--color-secondary);
+    color: var(--color-card-secondary);
 }
 
 .form-input {
-    background: var(--color-bg);
+    background: var(--color-card-bg);
     border: 1px solid var(--color-border);
     border-radius: var(--border-radius);
     padding: 0.75rem;
-    color: var(--color-text);
+    color: var(--color-card-text);
     font-size: 1rem;
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
@@ -1520,7 +1519,7 @@ section {
 }
 
 .form-input::placeholder {
-    color: var(--color-text-light);
+    color: var(--color-card-secondary);
     opacity: 0.7;
 }
 .form-submit-btn {
@@ -1594,11 +1593,10 @@ section {
 }
 
 .value-card {
-    background: rgba(22, 27, 34, 0.5); /* Dark semi-transparent background */
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.1); /* Subtle border for the glass effect */
+    background: var(--color-card-bg);
+    border: 1px solid var(--color-border); /* Will be overridden on hover */
     border-radius: var(--border-radius);
+    color: var(--color-card-secondary); /* Set default text color for the card */
     padding: var(--spacing-lg);
 }
 
@@ -1622,6 +1620,7 @@ section {
 }
 
 .value-card-header h3 {
+    color: var(--color-card-text);
     font-size: 1.25rem;
 }
 
@@ -1665,18 +1664,22 @@ section {
 }
 
 .faq-item {
-    background: rgba(22, 27, 34, 0.5); /* Dark semi-transparent background */
-    backdrop-filter: blur(10px); 
-    -webkit-backdrop-filter: blur(10px); /* For Safari */
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border: 1px solid var(--color-border);
+    background: var(--color-card-bg);
+    border: 1px solid var(--color-border); /* Will be overridden on hover */
     border-radius: var(--border-radius);
     transition: background-color 0.2s ease;
 }
 
 .faq-item[open] {
-    background: var(--color-bg-light);
     border-color: var(--color-primary);
+}
+
+.faq-item[open] .faq-question h3 {
+    color: var(--color-primary);
+}
+
+.faq-item[open] .faq-answer {
+    /* The color is already set on the .faq-answer class */
 }
 
 .faq-item:hover {
@@ -1691,11 +1694,12 @@ section {
     padding: var(--spacing-lg);
     cursor: pointer;
     font-size: 1.1rem;
-    font-weight: 600;
+    font-weight: 600; 
 }
 
 .faq-question h3 {
     font-size: inherit;
+    color: var(--color-card-text);
     font-weight: inherit;
 }
 
@@ -1704,6 +1708,7 @@ section {
 .faq-question { list-style: none; }
 
 .faq-icon {
+    color: var(--color-card-text); /* Ensure icon is white on dark card */
     transition: transform 0.3s ease;
 }
 
@@ -1713,7 +1718,7 @@ section {
 
 .faq-answer {
     padding: 0 var(--spacing-lg) var(--spacing-lg);
-    color: var(--color-secondary);
+    color: var(--color-card-secondary);
     overflow: hidden;
     transition: grid-template-rows 0.3s ease-in-out;
     display: grid;
@@ -1728,11 +1733,9 @@ section {
    ========================================================================== */
 
 .testimonial-card {
-    background: rgba(22, 27, 34, 0.5); /* Dark semi-transparent background */
-    backdrop-filter: blur(10px); 
-    -webkit-backdrop-filter: blur(10px); /* For Safari */
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: var(--color-card-bg);
     border-radius: var(--border-radius);
+    border: 1px solid var(--color-border); /* Will be overridden on hover */
     padding: var(--spacing-lg);    
     display: flex;
     flex: 0 0 100%; /* Each card takes full width of the container */
@@ -1747,7 +1750,7 @@ section {
 .testimonial-card blockquote {
     font-size: 1.1rem;
     font-style: italic;
-    color: var(--color-text);
+    color: var(--color-card-text);
     border-left: 3px solid var(--color-primary);
     padding-left: var(--spacing-md);
     margin-bottom: var(--spacing-md);
@@ -1767,13 +1770,14 @@ section {
 
 .testimonial-author cite {
     font-weight: bold;
+    color: var(--color-card-text);
     font-style: normal;
     display: block;
 }
 
 .testimonial-author span {
     font-size: 0.9rem;
-    color: var(--color-secondary);
+    color: var(--color-card-secondary);
 }
 
 .testimonial-carousel {
@@ -1791,10 +1795,10 @@ section {
 .carousel-btn {
     position: absolute;
     top: 50%;
-    transform: translateY(-50%);
-    background-color: rgba(22, 27, 34, 0.7);
-    border: 1px solid var(--color-border);
-    color: var(--color-text);
+    transform: translateY(-50%); 
+    background-color: var(--color-card-bg);
+    border: 1px solid var(--color-border); 
+    color: var(--color-card-text);
     width: 44px;
     height: 44px;
     border-radius: 50%;
@@ -1807,7 +1811,7 @@ section {
 }
 
 .carousel-btn:hover {
-    background-color: var(--color-bg-light);
+    background-color: var(--color-primary);
     border-color: var(--color-primary);
 }
 
@@ -1879,9 +1883,7 @@ section {
    CTA Contact Section
    ========================================================================== */
 .cta-section {
-    background: rgba(22, 27, 34, 0.5);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
+    background: var(--color-card-bg);
     border: 1px solid var(--color-primary);
     border-radius: var(--border-radius);
     padding: var(--spacing-xl);
@@ -1896,6 +1898,7 @@ section {
 
 .cta-text .section-title,
 .cta-text .section-subtitle {
+    color: var(--color-card-text); 
     text-align: left;
     margin-left: 0;
     margin-right: 0;

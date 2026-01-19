@@ -8,6 +8,7 @@ window.addEventListener("load", async () => {
     initMobileNav();
     initVideoModal();
     initSmoothScroll();
+    initActiveNavOnScroll();
     initFooter();
     initBackToTopButton();
     initScrollAnimations();
@@ -30,10 +31,12 @@ window.addEventListener("load", async () => {
         // --- Open/Close Full Screen Menu ---
         const openMenu = () => {
             fullMenu.classList.add('open');
+            openMenuButtons.forEach(btn => btn.setAttribute('aria-expanded', 'true'));
             document.body.style.overflow = 'hidden';
         };
         const closeMenu = () => {
             fullMenu.classList.remove('open');
+            openMenuButtons.forEach(btn => btn.setAttribute('aria-expanded', 'false'));
             document.body.style.overflow = '';
         };
 
@@ -151,8 +154,9 @@ window.addEventListener("load", async () => {
 
     function initFooter() {
         const yearSpan = document.getElementById('copyright-year');
-        if (yearSpan) yearSpan.textContent = new Date().getFullYear();
-        initActiveNavOnScroll(); // Call here to ensure it runs after components are loaded
+        if (yearSpan) {
+            yearSpan.textContent = new Date().getFullYear();
+        }
     }
 
     function initScrollAnimations() {
@@ -311,8 +315,12 @@ window.addEventListener("load", async () => {
         const containers = document.querySelectorAll('[data-component-container]');
         const fetchPromises = Array.from(containers).map(async (container) => {
             const componentName = container.dataset.componentContainer;
+            // Simplified and more robust pathing for GitHub Pages and local server
+            const repoName = window.location.pathname.split('/')[1];
+            const isGitHubPages = window.location.hostname.includes('github.io');
+            const base = isGitHubPages ? `/${repoName}/` : '/';
             // GitHub Pages is case-sensitive. This will try both common casings.
-            const pathsToTry = [`components/${componentName}.html`, `Components/${componentName}.html`];
+            const pathsToTry = [`${base}Components/${componentName}.html`, `${base}components/${componentName}.html`];
             try {
                 let response = await fetch(pathsToTry[0]);
                 if (!response.ok) {
