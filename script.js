@@ -1,137 +1,55 @@
-window.addEventListener("load", () => {
+window.addEventListener("load", async () => {
     // --- CONFIGURATION ---
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzej-nFg1KXUm6I6peJe3HE4pNsZlpTvaXqRUPQScMxgxAa9rYN__iPaJz4vFUgymkzFQ/exec";
 
     // --- OBSERVERS & INITIALIZERS ---
     // --- INITIALIZE ALL PAGE FUNCTIONS ---
-    loadComponents(); // Must run before other initializers that depend on component content
+    await loadComponents(); // Wait for components to load before running other scripts
+
     initMobileNav();
-    initModal();
     initVideoModal();
     initSmoothScroll();
     initFooter();
     initBackToTopButton();
     initScrollAnimations();
+    initTestimonialCarousel();
+    initFaqAnimation();
+    initMainContactForm();
 
     // Hide preloader
     const preloader = document.getElementById('preloader');
     if (preloader) preloader.classList.add('loaded');
 
     function initMobileNav() {
-        const toggleBtn = document.querySelector('.mobile-nav-toggle');
-        const navLinksWrapper = document.querySelector('.nav-links-wrapper');
-        if (!toggleBtn || !navLinksWrapper) return;
+        // This function now only handles the full-screen overlay menu
+        const fullMenu = document.querySelector('.full-menu-overlay');
+        const openMenuButtons = document.querySelectorAll('.mobile-nav-toggle'); // Use class for multiple buttons
+        const closeFullMenuBtn = document.querySelector('.close-full-menu');
 
-        toggleBtn.addEventListener('click', () => {
-            const isOpened = toggleBtn.getAttribute('aria-expanded') === 'true';
-            toggleBtn.setAttribute('aria-expanded', !isOpened);
-            document.body.classList.toggle('mobile-nav-open');
-        });
+        if (!fullMenu || !openMenuButtons.length || !closeFullMenuBtn) return;
 
-        // Close menu when a link is clicked
-        navLinksWrapper.addEventListener('click', (e) => {
-            if (e.target.tagName === 'A') {
-                toggleBtn.setAttribute('aria-expanded', 'false');
-                document.body.classList.remove('mobile-nav-open');
-            }
-        });
-
-        // Keyboard accessibility: close with Escape key
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && document.body.classList.contains('mobile-nav-open')) {
-                toggleBtn.setAttribute('aria-expanded', 'false');
-                document.body.classList.remove('mobile-nav-open');
-            }
-        });
-
-        // Trap focus inside the mobile menu when it's open
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Tab' && document.body.classList.contains('mobile-nav-open')) {
-                const focusableElements = navLinksWrapper.querySelectorAll('a[href]');
-                const firstElement = focusableElements[0];
-                const lastElement = focusableElements[focusableElements.length - 1];
-
-                if (!e.shiftKey && document.activeElement === lastElement) {
-                    firstElement.focus();
-                    e.preventDefault();
-                }
-            }
-        });
-    }
-
-    function initModal() {
-        const modal = document.getElementById('contact-modal');
-        if (!modal) return;
-
-        const form = document.getElementById('contact-form');
-        const openButtons = document.querySelectorAll('.open-modal-btn');
-        const closeButton = document.querySelector('.modal-close-btn');
-        const selectedPlanEl = document.getElementById('selected-plan-name');
-        const planSelect = document.getElementById('plan');
-        const meetingTimeInput = document.getElementById('meeting-time');
-        const focusableElements = 'button, [href], input, [tabindex]:not([tabindex="-1"])';
-
-        openButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                const planName = button.dataset.plan;
-                selectedPlanEl.textContent = planName;
-                planSelect.value = planName;
-
-                // Set min attribute for datetime-local input to the current time
-                const now = new Date();
-                // Adjust for timezone offset
-                now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
-                // Format to 'YYYY-MM-DDTHH:mm'
-                const yyyy = now.getFullYear();
-                const mm = String(now.getMonth() + 1).padStart(2, '0');
-                const dd = String(now.getDate()).padStart(2, '0');
-                const hh = String(now.getHours()).padStart(2, '0');
-                const min = String(now.getMinutes()).padStart(2, '0');
-                meetingTimeInput.min = `${yyyy}-${mm}-${dd}T${hh}:${min}`;
-
-                modal.removeAttribute('aria-hidden');
-                // Focus the first focusable element in the modal
-                document.addEventListener('keydown', handleModalKeys);
-                modal.querySelector(focusableElements).focus();
-            });
-        });
-
-        const closeModal = () => {
-            modal.setAttribute('aria-hidden', 'true');
-            form.reset();
-            document.removeEventListener('keydown', handleModalKeys);
-            document.querySelector('.form-status').innerHTML = '';
+        // --- Open/Close Full Screen Menu ---
+        const openMenu = () => {
+            fullMenu.classList.add('open');
+            document.body.style.overflow = 'hidden';
+        };
+        const closeMenu = () => {
+            fullMenu.classList.remove('open');
+            document.body.style.overflow = '';
         };
 
-        // Keyboard accessibility
-        const handleModalKeys = (e) => {
-            if (e.key === 'Tab') {
-                const modalFocusables = Array.from(modal.querySelectorAll(focusableElements));
-                const firstElement = modalFocusables[0];
-                const lastElement = modalFocusables[modalFocusables.length - 1];
+        openMenuButtons.forEach(btn => btn.addEventListener('click', openMenu));
+        closeFullMenuBtn.addEventListener('click', closeMenu);
 
-                if (e.shiftKey) { // Shift + Tab
-                    if (document.activeElement === firstElement) {
-                        lastElement.focus();
-                        e.preventDefault();
-                    }
-                } else { // Tab
-                    if (document.activeElement === lastElement) {
-                        firstElement.focus();
-                        e.preventDefault();
-                    }
-                }
-            } else if (e.key === 'Escape') {
-                closeModal();
-            }
-        };
+        // Close menu if a link inside it is clicked
+        fullMenu.addEventListener('click', (e) => {
+            if (e.target.tagName === 'A') closeMenu();
+        });
 
-        // Consolidated close events
-        [closeButton, modal].forEach(el => el.addEventListener('click', (e) => {
-            if (e.target === modal || e.target === closeButton) closeModal();
-        }));
-
-        form.addEventListener('submit', handleFormSubmit);
+        // Close with Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && fullMenu.classList.contains('open')) closeMenu();
+        });
     }
 
     function initVideoModal() {
@@ -164,7 +82,7 @@ window.addEventListener("load", () => {
     }
 
     function initSmoothScroll() {
-        const navLinks = document.querySelectorAll('.nav-links a[href^="#"]');
+        const navLinks = document.querySelectorAll('a[href^="#"]');
         navLinks.forEach(link => {
             link.addEventListener('click', function(e) {
                 e.preventDefault();
@@ -181,7 +99,7 @@ window.addEventListener("load", () => {
 
     function initActiveNavOnScroll() {
         const sections = document.querySelectorAll('section[id]');
-        const navLinks = document.querySelectorAll('.nav-links a[href^="/index.html#"]');
+        const navLinks = document.querySelectorAll('.nav-links a[href*="#"]');
 
         if (!sections.length || !navLinks.length) return;
 
@@ -254,6 +172,102 @@ window.addEventListener("load", () => {
         animatedElements.forEach(el => observer.observe(el));
     }
 
+    function initTestimonialCarousel() {
+        const carousel = document.querySelector('.testimonial-carousel');
+        if (!carousel) return;
+
+        const slidesContainer = carousel.querySelector('.testimonial-slides');
+        const slides = Array.from(slidesContainer.children);
+        const nextButton = carousel.querySelector('.carousel-btn.next');
+        const prevButton = carousel.querySelector('.carousel-btn.prev');
+        const dotsContainer = carousel.querySelector('.carousel-dots');
+        let currentIndex = 0;
+
+        if (slides.length <= 1) {
+            nextButton.style.display = 'none';
+            prevButton.style.display = 'none';
+            return;
+        }
+
+        // Create dots
+        slides.forEach((_, i) => {
+            const dot = document.createElement('button');
+            dot.classList.add('carousel-dot');
+            if (i === 0) dot.classList.add('active');
+            dot.setAttribute('aria-label', `Go to slide ${i + 1}`);
+            dot.addEventListener('click', () => goToSlide(i));
+            dotsContainer.appendChild(dot);
+        });
+
+        const dots = Array.from(dotsContainer.children);
+
+        const goToSlide = (index) => {
+            // Clamp index
+            if (index < 0) {
+                index = slides.length - 1;
+            } else if (index >= slides.length) {
+                index = 0;
+            }
+
+            slidesContainer.style.transform = `translateX(-${index * 100}%)`;
+            currentIndex = index;
+            updateDots();
+        };
+
+        const updateDots = () => {
+            dots.forEach((dot, i) => {
+                dot.classList.toggle('active', i === currentIndex);
+            });
+        };
+
+        nextButton.addEventListener('click', () => {
+            goToSlide(currentIndex + 1);
+        });
+
+        prevButton.addEventListener('click', () => {
+            goToSlide(currentIndex - 1);
+        });
+
+    }
+
+    function initFaqAnimation() {
+        const faqItems = document.querySelectorAll('.faq-item');
+        if (!faqItems.length) return;
+
+        faqItems.forEach(item => {
+            const summary = item.querySelector('summary');
+            const answer = item.querySelector('.faq-answer');
+            const content = answer.querySelector('p'); // The actual content inside
+
+            summary.addEventListener('click', (e) => {
+                // Prevent the default open/close to manage it manually
+                e.preventDefault();
+
+                if (item.open) {
+                    // Closing animation
+                    const openAnimation = answer.animate({ height: [`${answer.offsetHeight}px`, '0px'] }, {
+                        duration: 300,
+                        easing: 'ease-in-out',
+                    });
+                    openAnimation.onfinish = () => item.removeAttribute('open');
+                } else {
+                    // Opening animation
+                    item.setAttribute('open', '');
+                    answer.animate({ height: ['0px', `${content.offsetHeight}px`] }, {
+                        duration: 300,
+                        easing: 'ease-in-out',
+                    });
+                }
+            });
+        });
+    }
+
+    function initMainContactForm() {
+        const form = document.getElementById('contact-form-main');
+        if (!form) return;
+        form.addEventListener('submit', handleFormSubmit);
+    }
+
     // --- FORM HANDLING ---
     function handleFormSubmit(e) {
         e.preventDefault();
@@ -300,7 +314,7 @@ window.addEventListener("load", () => {
         for (const container of containers) {
             const componentName = container.dataset.componentContainer;
             try {
-                const response = await fetch(`/components/${componentName}.html`);
+                const response = await fetch(`components/${componentName}.html`);
                 if (!response.ok) throw new Error(`Component not found: ${componentName}`);
                 const html = await response.text();
                 container.innerHTML = html;

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="Insights, tutorials, and stories on recruitment operations, automation, and agency growth from Clipered B.">
-    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
     <title>Insights | Clipered B.</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
@@ -21,10 +21,10 @@
 
             <div class="insights-grid">
                 <!-- Video Tutorial Card -->
-                <a href="tutorial-1.html" class="insight-card">
+                <div class="insight-card open-video-btn clickable" data-video-src="https://www.youtube.com/embed/0xprsG1Sz_g?autoplay=1">
                     <div class="insight-card-img">
-                        <img src="images/thumbnail-tutorial-1.png" alt="Video thumbnail for automation tutorial">
-                        <div class="insight-card-play-icon"><i class="fas fa-play"></i></div>
+                        <img src="https://i3.ytimg.com/vi/0xprsG1Sz_g/maxresdefault.jpg" alt="Video thumbnail for automation tutorial">
+                        <div class="insight-card-play-icon"><i class="fas fa-play-circle"></i></div>
                     </div>
                     <div class="insight-card-content">
                         <span class="insight-card-tag">Video Tutorial</span>
@@ -32,12 +32,12 @@
                         <p>A step-by-step guide to setting up a chatbot that qualifies and schedules candidates, saving you hours of manual work.</p>
                         <span class="insight-card-readmore">Watch Now <i class="fas fa-arrow-right"></i></span>
                     </div>
-                </a>
+                </div>
 
                 <!-- Story Card -->
                 <a href="story-1.html" class="insight-card">
                     <div class="insight-card-img">
-                        <img src="images/story-scaling-agency.png" alt="Image representing a success story">
+                        <img src="images/Application 10+100.png" alt="Image representing a success story">
                     </div>
                     <div class="insight-card-content">
                         <span class="insight-card-tag">Success Story</span>
@@ -50,7 +50,7 @@
                 <!-- New Comparison Story Card -->
                 <a href="digital-vs-traditional.html" class="insight-card">
                     <div class="insight-card-img">
-                        <img src="images/comparison-digital-vs-traditional.png" alt="A split image showing a messy desk with papers versus a clean digital dashboard">
+                        <img src="images/The old Way Vs The New Way.png" alt="A split image showing a messy desk with papers versus a clean digital dashboard">
                     </div>
                     <div class="insight-card-content">
                         <span class="insight-card-tag">Strategy</span>
@@ -63,7 +63,7 @@
                 <!-- New "From Overwhelmed to Optimized" Story Card -->
                 <a href="from-overwhelmed-to-optimized.html" class="insight-card">
                     <div class="insight-card-img">
-                        <img src="images/story-overwhelmed-to-optimized.png" alt="A graphic showing a chaotic process becoming streamlined">
+                        <img src="images/Business Strategy.png" alt="A graphic showing a chaotic process becoming streamlined">
                     </div>
                     <div class="insight-card-content">
                         <span class="insight-card-tag">Core Philosophy</span>
@@ -77,6 +77,16 @@
     </main>
 
     <div data-component-container="footer"></div>
+
+    <!-- Video Demo Modal -->
+    <div id="video-modal" class="modal-overlay" aria-hidden="true">
+        <div class="video-modal-content" role="dialog" aria-modal="true">
+            <button class="modal-close-btn" aria-label="Close modal">&times;</button>
+            <div class="video-container">
+                <iframe src="" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+        </div>
+    </div>
 
     <script src="script.js"></script>
 </body>
