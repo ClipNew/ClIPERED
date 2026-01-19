@@ -313,10 +313,18 @@ window.addEventListener("load", async () => {
         const containers = document.querySelectorAll('[data-component-container]');
         for (const container of containers) {
             const componentName = container.dataset.componentContainer;
+            // Try fetching from lowercase 'components' first, then capitalized 'Components'
+            const pathsToTry = [`components/${componentName}.html`, `Components/${componentName}.html`];
             try {
-                const response = await fetch(`components/${componentName}.html`);
-                if (!response.ok) throw new Error(`Component not found: ${componentName}`);
-                const html = await response.text();
+                let response = await fetch(pathsToTry[0]);
+                if (!response.ok) {
+                    response = await fetch(pathsToTry[1]); // Fallback to the capitalized path
+                }
+
+                if (!response.ok) {
+                    throw new Error(`Component not found: ${componentName}`);
+                }
+                const html = await response.text(); 
                 container.innerHTML = html;
             } catch (error) {
                 container.innerHTML = `<p style="color: red;">Error loading ${componentName}: ${error.message}</p>`;
