@@ -2,7 +2,6 @@ window.addEventListener("load", async () => {
     // --- CONFIGURATION ---
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzej-nFg1KXUm6I6peJe3HE4pNsZlpTvaXqRUPQScMxgxAa9rYN__iPaJz4vFUgymkzFQ/exec";
 
-    // --- OBSERVERS & INITIALIZERS ---
     // --- INITIALIZE ALL PAGE FUNCTIONS ---
     await loadComponents(); // Wait for components to load before running other scripts
 
@@ -308,12 +307,11 @@ window.addEventListener("load", async () => {
             });
     }
 
-    // --- DYNAMIC COMPONENT LOADING ---
     async function loadComponents() {
         const containers = document.querySelectorAll('[data-component-container]');
-        for (const container of containers) {
+        const fetchPromises = Array.from(containers).map(async (container) => {
             const componentName = container.dataset.componentContainer;
-            // Try fetching from lowercase 'components' first, then capitalized 'Components'
+            // GitHub Pages is case-sensitive. This will try both common casings.
             const pathsToTry = [`components/${componentName}.html`, `Components/${componentName}.html`];
             try {
                 let response = await fetch(pathsToTry[0]);
@@ -322,14 +320,16 @@ window.addEventListener("load", async () => {
                 }
 
                 if (!response.ok) {
-                    throw new Error(`Component not found: ${componentName}`);
+                    throw new Error(`Component '${componentName}' not found at paths: ${pathsToTry.join(', ')}`);
                 }
-                const html = await response.text(); 
+                const html = await response.text();
                 container.innerHTML = html;
             } catch (error) {
-                container.innerHTML = `<p style="color: red;">Error loading ${componentName}: ${error.message}</p>`;
+                container.innerHTML = `<p style="color: red; text-align: center; padding: 1rem;">Error: ${error.message}</p>`;
                 console.error(error);
             }
-        }
+        });
+        await Promise.all(fetchPromises);
     }
+
 });
