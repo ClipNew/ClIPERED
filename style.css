@@ -991,8 +991,8 @@ section {
     }
 
     /* Mobile Navigation Overlay */
-    .main-nav {
-        display: none; /* Hide the top nav on mobile */
+    .main-nav .nav-links-wrapper, .main-nav .nav-cta {
+        display: none; /* Hide only the desktop links and CTA on mobile */
     }
 
     .full-menu-overlay {

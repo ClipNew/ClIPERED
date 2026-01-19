@@ -1,6 +1,6 @@
 window.addEventListener("load", async () => {
     // --- CONFIGURATION ---
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzej-nFg1KXUm6I6peJe3HE4pNsZlpTvaXqRUPQScMxgxAa9rYN__iPaJz4vFUgymkzFQ/exec";
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzoTqmvHZ9x1_ByIVANrW9aWf8TLb2iqkJIjDvXw8yTlaeTMlpEb3Z4FUpLQk9H-b3omg/exec";
 
     // --- INITIALIZE ALL PAGE FUNCTIONS ---
     await loadComponents(); // Wait for components to load before running other scripts
@@ -284,17 +284,9 @@ window.addEventListener("load", async () => {
         submitBtn.disabled = true;
 
         fetch(SCRIPT_URL, {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => {
-                // Google Apps Script redirects on success, so we check for a redirect response.
-                // A type of 'opaque' also indicates a successful 'no-cors' submission if you stick with that.
-                if (response.ok || response.type === 'opaque' || (response.status === 0 && response.type === 'cors')) {
-                    return response; // Or a resolved promise
-                }
-                // If the server returns an error, we can catch it here.
-                throw new Error('Network response was not ok.');
+            method: 'POST',
+            mode: 'no-cors', // Use 'no-cors' for Google Apps Script to avoid CORS errors
+            body: formData
             })
             .then(() => {
                 statusEl.textContent = 'Success! We will be in touch shortly.';
@@ -302,7 +294,7 @@ window.addEventListener("load", async () => {
                 form.reset();
             })
             .catch(error => {
-                statusEl.textContent = 'An error occurred. Please try again.';
+                statusEl.textContent = 'An error occurred. Please check your connection and try again.';
                 statusEl.classList.add('error');
                 console.error('Error!', error.message);
             })
