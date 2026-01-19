@@ -332,20 +332,13 @@ window.addEventListener("load", async () => {
         const containers = document.querySelectorAll('[data-component-container]');
         const fetchPromises = Array.from(containers).map(async (container) => {
             const componentName = container.dataset.componentContainer;
-            // Simplified and more robust pathing for GitHub Pages and local server
-            const repoName = window.location.pathname.split('/')[1];
-            const isGitHubPages = window.location.hostname.includes('github.io');
-            const base = isGitHubPages ? `/${repoName}/` : '/';
-            // GitHub Pages is case-sensitive. This will try both common casings.
-            const pathsToTry = [`${base}Components/${componentName}.html`, `${base}components/${componentName}.html`];
+            const path = `components/${componentName}.html`;
             try {
-                let response = await fetch(pathsToTry[0]);
-                if (!response.ok) {
-                    response = await fetch(pathsToTry[1]); // Fallback to the capitalized path
-                }
+                // Use a relative path, which works both locally and on GitHub Pages
+                const response = await fetch(path);
 
                 if (!response.ok) {
-                    throw new Error(`Component '${componentName}' not found at paths: ${pathsToTry.join(', ')}`);
+                    throw new Error(`Component '${componentName}' not found at path: ${path}`);
                 }
                 const html = await response.text();
                 container.innerHTML = html;
