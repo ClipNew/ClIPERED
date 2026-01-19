@@ -295,7 +295,7 @@ a {
 .hero-btns {
     margin-top: var(--spacing-lg);
     display: flex;
-    gap: var(--spacing-md);
+    gap: var(--spacing-md); 
 }
 
 /* ==========================================================================
@@ -1160,45 +1160,6 @@ section {
     }
 }
 
-    padding: var(--spacing-lg);
-    display: flex;
-    flex-direction: column;
-    text-align: center;
-    z-index: 2;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-.strategy-card:hover, .partner-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 0 20px rgba(58, 125, 255, 0.2);
-    border-color: var(--color-primary);
-}
-.partner-card.demo-card {
-}
-
-.partner-card-header i {
-    font-size: 2rem;
-    color: var(--color-primary);
-    margin-bottom: var(--spacing-sm);
-}.partner-card-header h3 {
-
-    margin-bottom: var(--spacing-lg);
-    text-align: left;
-}
-
-.partner-card p {
-    color: var(--color-card-secondary);
-}
-
-.partner-card-footer {
-    margin-top: auto;
-}
-
-.partner-card-note {
-    font-size: 0.875rem;
-    color: var(--color-card-secondary);
-    font-style: italic;
-}
-
 /* ==========================================================================
    Post/Article Styles
    ========================================================================== */
@@ -1248,7 +1209,7 @@ section {
     transition: transform 0.3s ease;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 992px) { /* Changed from 768px to 992px for better tablet view */
     .post-content {
         grid-template-columns: 1fr 1fr; /* Two columns on larger screens */
     }

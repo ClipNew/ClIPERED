@@ -7,6 +7,7 @@ window.addEventListener("load", async () => {
 
     initMobileNav();
     initVideoModal();
+    initContactModal();
     initSmoothScroll();
     initActiveNavOnScroll();
     initFooter();
@@ -23,29 +24,28 @@ window.addEventListener("load", async () => {
     function initMobileNav() {
         // This function now only handles the full-screen overlay menu
         const fullMenu = document.querySelector('.full-menu-overlay');
-        const openMenuButtons = document.querySelectorAll('.mobile-nav-toggle'); // Use class for multiple buttons
-        const closeFullMenuBtn = document.querySelector('.close-full-menu');
+        const toggleButtons = document.querySelectorAll('.mobile-nav-toggle');
 
-        if (!fullMenu || !openMenuButtons.length || !closeFullMenuBtn) return;
+        if (!fullMenu || !toggleButtons.length) return;
 
         // --- Open/Close Full Screen Menu ---
-        const openMenu = () => {
-            fullMenu.classList.add('open');
-            openMenuButtons.forEach(btn => btn.setAttribute('aria-expanded', 'true'));
-            document.body.style.overflow = 'hidden';
-        };
-        const closeMenu = () => {
-            fullMenu.classList.remove('open');
-            openMenuButtons.forEach(btn => btn.setAttribute('aria-expanded', 'false'));
-            document.body.style.overflow = '';
+        const toggleMenu = () => {
+            const isOpen = fullMenu.classList.toggle('open');
+            toggleButtons.forEach(btn => btn.setAttribute('aria-expanded', isOpen));
+            document.body.style.overflow = isOpen ? 'hidden' : '';
         };
 
-        openMenuButtons.forEach(btn => btn.addEventListener('click', openMenu));
-        closeFullMenuBtn.addEventListener('click', closeMenu);
+        toggleButtons.forEach(btn => btn.addEventListener('click', toggleMenu));
 
         // Close menu if a link inside it is clicked
         fullMenu.addEventListener('click', (e) => {
-            if (e.target.tagName === 'A') closeMenu();
+            if (e.target.tagName === 'A') {
+                // Check if it's a link that navigates away or a hash link
+                const href = e.target.getAttribute('href');
+                if (href && href.startsWith('#')) {
+                    toggleMenu();
+                }
+            }
         });
 
         // Close with Escape key
@@ -80,6 +80,31 @@ window.addEventListener("load", async () => {
         // Consolidated close events
         [closeButton, videoModal].forEach(el => el.addEventListener('click', (e) => {
             if (e.target === videoModal || e.target === closeButton) closeVideoModal();
+        }));
+    }
+
+    function initContactModal() {
+        const contactModal = document.getElementById('contact-modal');
+        if (!contactModal) return;
+
+        const openButtons = document.querySelectorAll('.open-contact-modal');
+        const closeButton = contactModal.querySelector('.modal-close-btn');
+
+        openButtons.forEach(button => {
+            button.addEventListener('click', (e) => {
+                e.preventDefault(); // Prevent default link behavior
+                contactModal.removeAttribute('aria-hidden');
+                document.body.style.overflow = 'hidden';
+            });
+        });
+
+        const closeModal = () => {
+            contactModal.setAttribute('aria-hidden', 'true');
+            document.body.style.overflow = '';
+        };
+
+        [closeButton, contactModal].forEach(el => el.addEventListener('click', (e) => {
+            if (e.target === contactModal || e.target.matches('.modal-close-btn')) closeModal();
         }));
     }
 
