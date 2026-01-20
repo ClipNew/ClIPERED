@@ -1,93 +1,35 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Insights, tutorials, and stories on recruitment operations, automation, and agency growth from Clipered B.">
-    <link rel="icon" href="favicon.ico" type="image/x-icon">
-    <title>Blog & Insights | Clipered B.</title>
-    <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-</head>
-<body>
+<section id="blog" class="container animate">
+    <h2 class="section-title">Insights & Demos</h2>
+    <p class="section-subtitle">Explore articles, case studies, and video demos that break down the strategies for building a high-growth recruitment agency.</p>
 
-    <div data-component-container="nav"></div>
-
-    <main>
-        <section class="container animate">
-            <h1 class="section-title">Blog, Insights & Tutorials</h1>
-            <p class="section-subtitle">A collection of video tutorials and stories on automation, growth, and the future of recruitment.</p>
-
-            <div class="insights-grid">
-                <!-- Video Tutorial Card - Now clickable -->
-                <div class="insight-card open-video-btn clickable" data-video-src="https://www.youtube.com/embed/0xprsG1Sz_g?autoplay=1">
-                    <div class="insight-card-img">
-                        <img src="https://i3.ytimg.com/vi/0xprsG1Sz_g/maxresdefault.jpg" alt="Video thumbnail for automation tutorial">
-                        <div class="insight-card-play-icon"><i class="fas fa-play-circle"></i></div>
-                    </div>
-                    <div class="insight-card-content">
-                        <span class="insight-card-tag">Video Tutorial</span>
-                        <h3>Automating Your Candidate Pipeline with Chatbots</h3>
-                        <p>A step-by-step guide to setting up a chatbot that qualifies and schedules candidates, saving you hours of manual work.</p>
-                        <span class="insight-card-readmore">Watch Now <i class="fas fa-arrow-right"></i></span>
-                    </div>
-                </div>
-
-                <!-- Story Card -->
-                <a href="story-1.html" class="insight-card">
-                    <div class="insight-card-img">
-                        <img src="images/Application 10+100.png" alt="Image representing a success story">
-                    </div>
-                    <div class="insight-card-content">
-                        <span class="insight-card-tag">Success Story</span>
-                        <h3>How We Scaled an Agency from 10 to 100+ Daily Applicants</h3>
-                        <p>A deep dive into the strategies and systems we implemented to achieve exponential growth for a landbase agency.</p>
-                        <span class="insight-card-readmore">Read Story <i class="fas fa-arrow-right"></i></span>
-                    </div>
-                </a>
-
-                <!-- New Comparison Story Card -->
-                <a href="digital-vs-traditional.html" class="insight-card">
-                    <div class="insight-card-img">
-                        <img src="images/The old Way Vs The New Way.png" alt="A split image showing a messy desk with papers versus a clean digital dashboard">
-                    </div>
-                    <div class="insight-card-content">
-                        <span class="insight-card-tag">Strategy</span>
-                        <h3>Old Agency vs. Digital Campaign: A DMW-Compliant Comparison</h3>
-                        <p>Explore the critical differences between traditional and modern recruitment processes and see how digitalization enhances compliance.</p>
-                        <span class="insight-card-readmore">Read Story <i class="fas fa-arrow-right"></i></span>
-                    </div>
-                </a>
-
-                <!-- New "From Overwhelmed to Optimized" Story Card -->
-                <a href="from-overwhelmed-to-optimized.html" class="insight-card">
-                    <div class="insight-card-img">
-                        <img src="images/Business Strategy.png" alt="A graphic showing a chaotic process becoming streamlined">
-                    </div>
-                    <div class="insight-card-content">
-                        <span class="insight-card-tag">Core Philosophy</span>
-                        <h3>From Overwhelmed to Optimized</h3>
-                        <p>The story of how modern agencies use digital systems to boost production and scale their impact.</p>
-                        <span class="insight-card-readmore">Read Story <i class="fas fa-arrow-right"></i></span>
-                    </div>
-                </a>
+    <div class="insights-grid">
+        <!-- Video Tutorial Card -->
+        <div class="insight-card open-video-btn clickable" data-video-src="https://www.youtube.com/embed/0xprsG1Sz_g?autoplay=1">
+            <div class="insight-card-img">
+                <img src="https://i3.ytimg.com/vi/0xprsG1Sz_g/maxresdefault.jpg" alt="Video thumbnail for automation tutorial">
+                <div class="insight-card-play-icon"><i class="fas fa-play-circle"></i></div>
             </div>
-        </section>
-    </main>
-
-    <div data-component-container="footer"></div>
-
-    <!-- Video Demo Modal -->
-    <div id="video-modal" class="modal-overlay" aria-hidden="true">
-        <div class="video-modal-content" role="dialog" aria-modal="true">
-            <button class="modal-close-btn" aria-label="Close modal">&times;</button>
-            <div class="video-container">
-                <iframe src="" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            <div class="insight-card-content">
+                <span class="insight-card-tag">Video Tutorial</span>
+                <h3>Automating Your Candidate Pipeline</h3>
+                <p>A step-by-step guide to setting up a chatbot that qualifies and schedules candidates, saving you hours of manual work.</p>
+                <span class="insight-card-readmore">Watch Now <i class="fas fa-arrow-right"></i></span>
             </div>
         </div>
-    </div>
 
-    <script src="script.js"></script>
-</body>
-</html>
+        <!-- Story Card -->
+        <a href="components/story-1.html" class="insight-card">
+            <div class="insight-card-img">
+                <img src="images/Application 10+100.png" alt="Image representing a success story">
+            </div>
+            <div class="insight-card-content">
+                <span class="insight-card-tag">Success Story</span>
+                <h3>How We Scaled an Agency to 100+ Daily Applicants</h3>
+                <p>A deep dive into the strategies and systems we implemented to achieve exponential growth for a landbase agency.</p>
+                <span class="insight-card-readmore">Read Story <i class="fas fa-arrow-right"></i></span>
+            </div>
+        </a>
+
+        <!-- You can add more cards here -->
+    </div>
+</section>

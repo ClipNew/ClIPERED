@@ -3,14 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Insights, tutorials, and stories on recruitment operations, automation, and agency growth from Clipered B.">
-    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+    <meta name="description" content="Explore articles, case studies, and video demos on recruitment operations, automation, and agency growth from Clipered B.">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
     <title>Insights | Clipered B.</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
+    <div id="top"></div>
+
 
     <div data-component-container="nav"></div>
 
@@ -78,7 +80,10 @@
 
     <!-- Contact Form Modal -->
     <div id="contact-modal" class="modal-overlay" aria-hidden="true">
-        <div data-component-container="contact"></div>
+        <div class="modal-content modal-content-lg" role="dialog" aria-modal="true">
+            <button class="modal-close-btn" aria-label="Close modal">&times;</button>
+            <div data-component-container="contact"></div>
+        </div>
     </div>
     <div data-component-container="footer"></div>
 

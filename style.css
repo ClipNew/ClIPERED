@@ -143,6 +143,7 @@ a {
     justify-content: space-between;
     padding-top: var(--spacing-md);
     padding-bottom: var(--spacing-md);
+    position: relative; /* For z-index */
 }
 
 .nav-logo {
@@ -229,10 +230,6 @@ a {
     top: 0;
     transform: rotate(-45deg);
     background-color: var(--color-card-text); /* Make the 'X' light */
-}
-
-.mobile-nav-open .nav-cta {
-    display: none; /* Hide CTA button when mobile nav is open */
 }
 
 .nav-cta {
@@ -1044,10 +1041,6 @@ section {
         cursor: pointer;
     }
 
-    .mobile-nav-open .full-menu-overlay {
-        opacity: 1;
-        visibility: visible;
-    }
 }
 
 @media (min-width: 1200px) {
@@ -1102,7 +1095,7 @@ section {
 .blog-card-img img, .insight-card-img img {
     width: 100%;
     height: 100%;
-    object-fit: contain; /* Show the full image, scaled down to fit */
+    object-fit: cover; /* Fill the container without distortion */
     border-radius: var(--border-radius) var(--border-radius) 0 0;
 }
 
@@ -1226,6 +1219,24 @@ section {
     }
 }
 
+.post-cta-banner {
+    background: var(--color-card-bg);
+    border: 1px solid var(--color-primary);
+    border-radius: var(--border-radius);
+    padding: var(--spacing-xl);
+    text-align: center;
+    margin-top: var(--spacing-xl);
+    box-shadow: 0 0 30px rgba(58, 125, 255, 0.2);
+}
+
+.post-cta-banner h3 {
+    color: var(--color-card-text);
+}
+
+.post-cta-banner p {
+    color: var(--color-card-secondary);
+    margin-bottom: var(--spacing-lg);
+}
 
 .comparison-grid {
     display: grid;
@@ -1679,15 +1690,21 @@ section {
 
 .faq-answer {
     padding: 0 var(--spacing-lg) var(--spacing-lg);
-    color: var(--color-card-secondary);
-    overflow: hidden;
-    transition: grid-template-rows 0.3s ease-in-out;
-    display: grid;
-    grid-template-rows: 0fr; /* Collapsed by default */
+    color: var(--color-card-secondary); /* Fallback for no JS */
+    overflow: hidden; /* Hide content that overflows during animation */
+    transition: max-height 0.3s ease-in-out, padding 0.3s ease-in-out;
+    max-height: 0;
+    padding-top: 0;
+    padding-bottom: 0;
 }
+
 .faq-item[open] .faq-answer {
-    grid-template-rows: 1fr; /* Expanded */
+    /* max-height needs a large enough value to not cut off content */
+    max-height: 500px; /* Adjust if answers are very long */
+    padding-top: 0;
+    padding-bottom: var(--spacing-lg);
 }
+
 
 /* ==========================================================================
    17. Testimonials Component

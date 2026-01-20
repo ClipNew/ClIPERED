@@ -11,6 +11,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
+    <div id="top"></div>
+
 
     <div data-component-container="nav"></div>
 
@@ -58,6 +60,24 @@
     </main>
 
     <div data-component-container="footer"></div>
+
+    <!-- Contact Form Modal -->
+    <div id="contact-modal" class="modal-overlay" aria-hidden="true">
+        <div class="modal-content modal-content-lg" role="dialog" aria-modal="true">
+            <button class="modal-close-btn" aria-label="Close modal">&times;</button>
+            <div data-component-container="contact"></div>
+        </div>
+    </div>
+
+    <!-- Video Demo Modal -->
+    <div id="video-modal" class="modal-overlay" aria-hidden="true">
+        <div class="video-modal-content" role="dialog" aria-modal="true">
+            <button class="modal-close-btn" aria-label="Close modal">&times;</button>
+            <div class="video-container">
+                <iframe src="" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+        </div>
+    </div>
 
     <script src="../script.js"></script>
 </body>

@@ -11,6 +11,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
+    <div id="top"></div>
+
 
     <div data-component-container="nav"></div>
 
@@ -18,7 +20,7 @@
         <article class="container animate">
             <div class="post-header">
                 <h1 class="section-title">How We Scaled an Agency from 10 to 100+ Daily Applicants</h1>
-                <p class="post-meta">Category: Success Story</p>
+                <p class="post-meta">Published on <time datetime="2023-10-28">October 28, 2023</time> • Category: Success Story</p>
             </div>
 
             <div class="post-content">
@@ -30,12 +32,44 @@
                     
                     <h2>The Solution</h2>
                     <p>We implemented a three-part strategy: a high-conversion landing page, a targeted Meta Ads campaign, and a chatbot to automate initial screening. This created a powerful, automated funnel that captured and qualified leads around the clock.</p>
+
+                    <h2>The Results</h2>
+                    <p>The impact was immediate and transformative. The agency achieved:</p>
+                    <ul>
+                        <li>A <strong>10x increase</strong> in daily qualified applicants.</li>
+                        <li>A <strong>90% reduction</strong> in time spent on manual screening.</li>
+                        <li>A fully transparent, real-time view of their entire recruitment pipeline.</li>
+                    </ul>
                 </div>
             </div>
         </article>
+
+        <div class="post-cta-banner container animate">
+            <h3>Ready to achieve similar results?</h3>
+            <p>Let's build a system that scales your agency's growth and eliminates operational bottlenecks.</p>
+            <a href="../index.html#pricing" class="btn btn-blue">View My Services</a>
+        </div>
     </main>
 
     <div data-component-container="footer"></div>
+
+    <!-- Contact Form Modal -->
+    <div id="contact-modal" class="modal-overlay" aria-hidden="true">
+        <div class="modal-content modal-content-lg" role="dialog" aria-modal="true">
+            <button class="modal-close-btn" aria-label="Close modal">&times;</button>
+            <div data-component-container="contact"></div>
+        </div>
+    </div>
+
+    <!-- Video Demo Modal -->
+    <div id="video-modal" class="modal-overlay" aria-hidden="true">
+        <div class="video-modal-content" role="dialog" aria-modal="true">
+            <button class="modal-close-btn" aria-label="Close modal">&times;</button>
+            <div class="video-container">
+                <iframe src="" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+        </div>
+    </div>
 
     <script src="../script.js"></script>
 </body>

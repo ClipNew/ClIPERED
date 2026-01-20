@@ -4,6 +4,7 @@ window.addEventListener("load", async () => {
 
     // --- INITIALIZE ALL PAGE FUNCTIONS ---
     await loadComponents(); // Wait for components to load before running other scripts
+    fixComponentAssetPaths(); // Adjust paths for assets within loaded components
 
     initMobileNav();
     initVideoModal();
@@ -35,23 +36,24 @@ window.addEventListener("load", async () => {
             document.body.style.overflow = isOpen ? 'hidden' : '';
         };
 
+        const closeMenu = () => {
+            if (fullMenu.classList.contains('open')) {
+                toggleMenu();
+            }
+        };
+
         toggleButtons.forEach(btn => btn.addEventListener('click', toggleMenu));
 
         // Close menu if a link inside it is clicked
         fullMenu.addEventListener('click', (e) => {
-            if (e.target.tagName === 'A') {
-                // Check if it's a link that navigates away or a hash link
-                const href = e.target.getAttribute('href');
-                if (href && href.startsWith('#')) {
-                    toggleMenu();
-                }
+            // Use .closest() to handle clicks on icons/text inside the link
+            if (e.target.closest('a[href^="#"]')) {
+                closeMenu();
             }
         });
 
         // Close with Escape key
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && fullMenu.classList.contains('open')) closeMenu();
-        });
+        document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeMenu(); });
     }
 
     function initVideoModal() {
@@ -109,16 +111,31 @@ window.addEventListener("load", async () => {
     }
 
     function initSmoothScroll() {
-        const navLinks = document.querySelectorAll('a[href^="#"]');
+        // Target links that are specifically for page scrolling.
+        // Exclude modal triggers or other JS-handled links by not giving them the 'page-scroll' class.
+        // Add class="page-scroll" to your navigation links in nav.html, footer.html, etc.
+        const navLinks = document.querySelectorAll('a.page-scroll');
         navLinks.forEach(link => {
             link.addEventListener('click', function(e) {
+                const href = this.getAttribute('href');
+                const url = new URL(href, window.location.href);
+                const currentUrl = new URL(window.location.href);
+
+                // If the link points to a different page, let the browser navigate.
+                if (url.pathname !== currentUrl.pathname) {
+                    return;
+                }
+
+                // If it's an on-page link, prevent default and scroll smoothly.
                 e.preventDefault();
-                const targetId = this.getAttribute('href');
-                const targetElement = document.querySelector(targetId);
+                const targetId = url.hash;
+                const targetElement = targetId ? document.querySelector(targetId) : null;
+
                 if (targetElement) {
                     targetElement.scrollIntoView({
                         behavior: 'smooth'
                     });
+                    history.pushState(null, null, targetId); // Optionally update URL
                 }
             });
         });
@@ -211,6 +228,11 @@ window.addEventListener("load", async () => {
         const dotsContainer = carousel.querySelector('.carousel-dots');
         let currentIndex = 0;
 
+        if (!slidesContainer || !nextButton || !prevButton || !dotsContainer) {
+            console.warn("Testimonial carousel is missing required elements.");
+            return;
+        }
+
         if (slides.length <= 1) {
             nextButton.style.display = 'none';
             prevButton.style.display = 'none';
@@ -260,38 +282,16 @@ window.addEventListener("load", async () => {
 
     function initFaqAnimation() {
         const faqItems = document.querySelectorAll('.faq-item');
-        if (!faqItems.length) return;
-
-        faqItems.forEach(item => {
-            const summary = item.querySelector('summary');
-            const answer = item.querySelector('.faq-answer');
-            const content = answer.querySelector('p'); // The actual content inside
-
-            summary.addEventListener('click', (e) => {
-                // Prevent the default open/close to manage it manually
-                e.preventDefault();
-
-                if (item.open) {
-                    // Closing animation
-                    const openAnimation = answer.animate({ height: [`${answer.offsetHeight}px`, '0px'] }, {
-                        duration: 300,
-                        easing: 'ease-in-out',
-                    });
-                    openAnimation.onfinish = () => item.removeAttribute('open');
-                } else {
-                    // Opening animation
-                    item.setAttribute('open', '');
-                    answer.animate({ height: ['0px', `${content.offsetHeight}px`] }, {
-                        duration: 300,
-                        easing: 'ease-in-out',
-                    });
-                }
-            });
-        });
+        // The animation is now handled by CSS for better performance and accessibility.
+        // The <details> and <summary> elements work natively without JavaScript.
+        // This function is kept in case you want to add more complex logic later,
+        // but for now, it does nothing. If no future logic is planned,
+        // this function and its call can be removed entirely.
     }
 
     function initMainContactForm() {
-        const form = document.getElementById('contact-form-main');
+        // The form is loaded into the modal, so we select it within its container.
+        const form = document.querySelector('#contact-modal #contact-form');
         if (!form) return;
         form.addEventListener('submit', handleFormSubmit);
     }
@@ -314,12 +314,16 @@ window.addEventListener("load", async () => {
             body: formData
             })
             .then(() => {
+                // NOTE: With 'no-cors', we can't see the response. The .then() block will
+                // execute even if the Google Script had an error. We assume success and reset the form.
+                // It's crucial to verify submissions in the target Google Sheet.
                 statusEl.textContent = 'Success! We will be in touch shortly.';
                 statusEl.classList.add('success');
                 form.reset();
             })
             .catch(error => {
-                statusEl.textContent = 'An error occurred. Please check your connection and try again.';
+                // This .catch() will only trigger on network errors, not on server-side errors from the script.
+                statusEl.textContent = 'A network error occurred. Please try again.';
                 statusEl.classList.add('error');
                 console.error('Error!', error.message);
             })
@@ -330,24 +334,61 @@ window.addEventListener("load", async () => {
 
     async function loadComponents() {
         const containers = document.querySelectorAll('[data-component-container]');
+        const isSubPage = isCurrentPageInSubdirectory();
+        const componentBasePath = isSubPage ? '../components/' : 'components/';
+
         const fetchPromises = Array.from(containers).map(async (container) => {
             const componentName = container.dataset.componentContainer;
-            const path = `components/${componentName}.html`;
-            try {
-                // Use a relative path, which works both locally and on GitHub Pages
-                const response = await fetch(path);
+            const path = `${componentBasePath}${componentName}.html`;
 
+            try {
+                const response = await fetch(path);
                 if (!response.ok) {
                     throw new Error(`Component '${componentName}' not found at path: ${path}`);
                 }
                 const html = await response.text();
                 container.innerHTML = html;
             } catch (error) {
-                container.innerHTML = `<p style="color: red; text-align: center; padding: 1rem;">Error: ${error.message}</p>`;
+                container.innerHTML = `<p style="color: red; text-align: center; padding: 1rem;">Error loading component: ${error.message}</p>`;
                 console.error(error);
             }
         });
         await Promise.all(fetchPromises);
     }
 
+    function isCurrentPageInSubdirectory() {
+        const path = window.location.pathname;
+        // Remove leading slash and split by slashes
+        const segments = path.substring(1).split('/');
+        // If there's more than one segment, it's in a subdirectory (e.g., 'posts/post1.html')
+        // Or if there's one segment that isn't an empty string (e.g., 'about.html' is not in a sub dir)
+        return segments.length > 1;
+    }
+
+    function fixComponentAssetPaths() {
+        const isSubPage = isCurrentPageInSubdirectory();
+        if (!isSubPage) return; // No changes needed on root pages
+
+        const components = document.querySelectorAll('[data-component-container]');
+        components.forEach(component => {
+            // Fix links like `index.html` or `insights.html`
+            const links = component.querySelectorAll('a[href]');
+            links.forEach(link => {
+                const href = link.getAttribute('href');
+                // Only prepend if it's a relative link to a page (not an external link or a hash link)
+                if (href && !href.startsWith('http') && !href.startsWith('#') && !href.startsWith('../')) {
+                    link.setAttribute('href', `../${href}`);
+                }
+            });
+
+            // Fix images
+            const images = component.querySelectorAll('img[src]');
+            images.forEach(img => {
+                const src = img.getAttribute('src');
+                if (src && !src.startsWith('http') && !src.startsWith('../') && !src.startsWith('/')) {
+                    img.setAttribute('src', `../${src}`);
+                }
+            });
+        });
+    }
 });
