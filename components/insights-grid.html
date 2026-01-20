@@ -4,7 +4,7 @@
 
     <div class="insights-grid">
         <!-- Video Tutorial Card -->
-        <div class="insight-card open-video-btn clickable" data-video-src="https://www.youtube.com/embed/0xprsG1Sz_g?autoplay=1">
+        <div class="insight-card open-video-btn clickable" data-video-src="https://www.youtube.com/embed/0xprsG1Sz_g?autoplay=1" data-insight-id="video-1">
             <div class="insight-card-img">
                 <img src="https://i3.ytimg.com/vi/0xprsG1Sz_g/maxresdefault.jpg" alt="Video thumbnail for automation tutorial">
                 <div class="insight-card-play-icon"><i class="fas fa-play-circle"></i></div>
@@ -18,7 +18,7 @@
         </div>
 
         <!-- Story Card -->
-        <a href="components/story-1.html" class="insight-card">
+        <a href="components/story-1.html" class="insight-card" data-insight-id="story-1">
             <div class="insight-card-img">
                 <img src="images/Application 10+100.png" alt="Image representing a success story">
             </div>
@@ -31,7 +31,7 @@
         </a>
 
         <!-- New Comparison Story Card -->
-        <a href="components/digital-vs-traditional.html" class="insight-card">
+        <a href="components/digital-vs-traditional.html" class="insight-card" data-insight-id="digital-vs-traditional">
             <div class="insight-card-img">
                 <img src="images/The old Way Vs The New Way.png" alt="A split image showing a messy desk with papers versus a clean digital dashboard">
             </div>
@@ -44,7 +44,7 @@
         </a>
 
         <!-- New "From Overwhelmed to Optimized" Story Card -->
-        <a href="components/from-overwhelmed-to-optimized.html" class="insight-card">
+        <a href="components/from-overwhelmed-to-optimized.html" class="insight-card" data-insight-id="from-overwhelmed-to-optimized">
             <div class="insight-card-img">
                 <img src="images/Business Strategy.png" alt="A graphic showing a chaotic process becoming streamlined">
             </div>
@@ -58,9 +58,13 @@
     </div>
 
     <!-- This button will only show on the index page, not on insights.html -->
+    <!-- And the section title will be different for the "More Insights" section -->
     <script>
-        if (window.location.pathname.endsWith('index.html') || window.location.pathname === '/') {
-            document.getElementById('insights-preview').insertAdjacentHTML('beforeend', '<div style="text-align: center; margin-top: var(--spacing-lg);"><a href="insights.html" class="btn btn-outline">View All Insights</a></div>');
+        const insightsSection = document.getElementById('insights-preview');
+        if (insightsSection.closest('.more-insights-section')) {
+            insightsSection.querySelector('.section-title').textContent = 'More Insights';
+        } else if (window.location.pathname.endsWith('index.html') || window.location.pathname === '/') {
+            insightsSection.insertAdjacentHTML('beforeend', '<div style="text-align: center; margin-top: var(--spacing-lg);"><a href="insights.html" class="btn btn-outline">View All Insights</a></div>');
         }
     </script>
 </section>

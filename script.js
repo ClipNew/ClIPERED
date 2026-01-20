@@ -17,6 +17,7 @@ window.addEventListener("load", async () => {
     initScrollAnimations();
     initTestimonialCarousel();
     initFaqAnimation();
+    initMoreInsights();
     initMainContactForm();
 
     // Hide preloader
@@ -66,6 +67,15 @@ window.addEventListener("load", async () => {
                 const src = img.getAttribute('src');
                 if (src && src.startsWith('images/')) {
                     img.setAttribute('src', `../${src}`);
+                }
+            });
+
+            // Fix anchor links
+            const links = component.querySelectorAll('a[href]');
+            links.forEach(link => {
+                const href = link.getAttribute('href');
+                if (href && href.startsWith('components/')) {
+                    link.setAttribute('href', `../${href}`);
                 }
             });
         });
@@ -245,11 +255,13 @@ window.addEventListener("load", async () => {
         nextButton.addEventListener('click', () => {
             index = (index + 1) % slides;
             slidesContainer.style.transform = `translateX(-${index * 100}%)`;
+            updateDots();
         });
 
         prevButton.addEventListener('click', () => {
             index = (index - 1 + slides) % slides;
             slidesContainer.style.transform = `translateX(-${index * 100}%)`;
+            updateDots();
         });
 
         // Create dots
@@ -281,8 +293,26 @@ window.addEventListener("load", async () => {
         // This can be enhanced, but native <details> is a good start.
     }
 
+    function initMoreInsights() {
+        const moreInsightsSection = document.querySelector('.more-insights-section');
+        if (!moreInsightsSection) return;
+
+        // Get the filename of the current page (e.g., "story-1.html")
+        const currentPageFilename = window.location.pathname.split('/').pop();
+
+        // Find all insight cards within the "More Insights" section
+        const insightCards = moreInsightsSection.querySelectorAll('.insight-card');
+
+        insightCards.forEach(card => {
+            // If the card's link matches the current page, hide it
+            if (card.getAttribute('href') && card.getAttribute('href').endsWith(currentPageFilename)) {
+                card.style.display = 'none';
+            }
+        });
+    }
+
     function initMainContactForm() {
-        const form = document.querySelector('#contact-form');
+        const form = document.querySelector('#contact-form-main');
         if (form) form.addEventListener('submit', handleFormSubmit);
     }
 
