@@ -112,6 +112,10 @@ window.addEventListener("load", async () => {
         const closeButton = videoModal.querySelector('.modal-close-btn');
         const iframe = videoModal.querySelector('iframe');
 
+        // Focus-trapping elements
+        const focusableElementsString = 'a[href], button, textarea, input[type="text"], input[type="email"], input[type="tel"], select';
+        let firstFocusableElement, lastFocusableElement;
+
         openButtons.forEach(button => {
             button.addEventListener('click', () => {
                 const videoSrc = button.dataset.videoSrc;
@@ -125,11 +129,29 @@ window.addEventListener("load", async () => {
         const closeVideoModal = () => {
             videoModal.setAttribute('aria-hidden', 'true');
             iframe.src = ""; 
+            document.body.style.overflow = '';
         };
 
         [closeButton, videoModal].forEach(el => el.addEventListener('click', (e) => {
             if (e.target === videoModal || e.target.closest('.modal-close-btn')) closeVideoModal();
         }));
+
+        videoModal.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeVideoModal();
+            if (e.key === 'Tab') {
+                if (e.shiftKey) { // Shift + Tab
+                    if (document.activeElement === firstFocusableElement) {
+                        lastFocusableElement.focus();
+                        e.preventDefault();
+                    }
+                } else { // Tab
+                    if (document.activeElement === lastFocusableElement) {
+                        firstFocusableElement.focus();
+                        e.preventDefault();
+                    }
+                }
+            }
+        });
     }
 
     function initContactModal() {
@@ -139,11 +161,20 @@ window.addEventListener("load", async () => {
         const openButtons = document.querySelectorAll('.open-contact-modal');
         const closeButton = contactModal.querySelector('.modal-close-btn');
 
+        // Focus-trapping elements
+        const focusableElementsString = 'a[href], button, textarea, input[type="text"], input[type="email"], input[type="tel"], select';
+        let firstFocusableElement, lastFocusableElement;
+
         openButtons.forEach(button => {
             button.addEventListener('click', (e) => {
                 e.preventDefault();
                 contactModal.removeAttribute('aria-hidden');
                 document.body.style.overflow = 'hidden';
+
+                const focusableElements = contactModal.querySelectorAll(focusableElementsString);
+                firstFocusableElement = focusableElements[0];
+                lastFocusableElement = focusableElements[focusableElements.length - 1];
+                firstFocusableElement.focus();
             });
         });
 
@@ -155,6 +186,23 @@ window.addEventListener("load", async () => {
         [closeButton, contactModal].forEach(el => el.addEventListener('click', (e) => {
             if (e.target === contactModal || e.target.closest('.modal-close-btn')) closeModal();
         }));
+
+        contactModal.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeModal();
+            if (e.key === 'Tab') {
+                if (e.shiftKey) { // Shift + Tab
+                    if (document.activeElement === firstFocusableElement) {
+                        lastFocusableElement.focus();
+                        e.preventDefault();
+                    }
+                } else { // Tab
+                    if (document.activeElement === lastFocusableElement) {
+                        firstFocusableElement.focus();
+                        e.preventDefault();
+                    }
+                }
+            }
+        });
     }
 
     function initSmoothScroll() {
