@@ -64,7 +64,7 @@
         if (insightsSection.closest('.more-insights-section')) {
             insightsSection.querySelector('.section-title').textContent = 'More Insights';
         } else if (window.location.pathname.endsWith('index.html') || window.location.pathname === '/') {
-            insightsSection.insertAdjacentHTML('beforeend', '<div style="text-align: center; margin-top: var(--spacing-lg);"><a href="insights.html" class="btn btn-outline">View All Insights</a></div>');
+            insightsSection.insertAdjacentHTML('beforeend', '<div style="text-align: center; margin-top: var(--spacing-lg);"><a href="/insights.html" class="btn btn-outline">View All Insights</a></div>');
         }
     </script>
 </section>
