@@ -25,30 +25,50 @@ window.addEventListener("load", async () => {
 
     // --- COMPONENT LOADER ---
     async function loadComponents() {
-        const containers = document.querySelectorAll('[data-component-container]');
-        
-        // Use './' to ensure it looks in the folder relative to index.html
-        // GitHub Pages requires lowercase 'components' to match your folder name
-        const componentBasePath = './components/'; 
+        const containers = document.querySelectorAll("[data-component-container]");
+        const isSubPage = isCurrentPageInSubdirectory();
+        const componentBasePath = isSubPage ? "../components/" : "components/";
 
         const fetchPromises = Array.from(containers).map(async (container) => {
             const componentName = container.dataset.componentContainer;
             const path = `${componentBasePath}${componentName}.html`;
-
             try {
                 const response = await fetch(path);
                 if (!response.ok) {
-                    throw new Error(`Component '${componentName}' not found at path: ${path}`);
+                    throw new Error(`Component '${componentName}' not found at path: ${path}. Check if the file exists and the name is correct.`);
                 }
                 const html = await response.text();
                 container.innerHTML = html;
             } catch (error) {
-                // This displays the red error messages you were seeing
-                container.innerHTML = `<p style="color: red; text-align: center; padding: 1rem;">Error loading component: ${error.message}</p>`;
+                container.innerHTML = `<p style="color: red; text-align: center; padding: 1rem;">${error.message}</p>`;
                 console.error(error);
             }
         });
         await Promise.all(fetchPromises);
+
+        // After loading, fix asset paths if on a sub-page
+        if (isSubPage) {
+            fixComponentAssetPaths();
+        }
+    }
+
+    function isCurrentPageInSubdirectory() {
+        // A simple check: if the path contains '/components/', it's a sub-page.
+        return window.location.pathname.includes('/components/');
+    }
+
+    function fixComponentAssetPaths() {
+        const components = document.querySelectorAll('[data-component-container]');
+        components.forEach(component => {
+            // Fix image paths
+            const images = component.querySelectorAll('img[src]');
+            images.forEach(img => {
+                const src = img.getAttribute('src');
+                if (src && src.startsWith('images/')) {
+                    img.setAttribute('src', `../${src}`);
+                }
+            });
+        });
     }
 
     // --- NAVIGATION & UI FUNCTIONS ---
@@ -128,12 +148,26 @@ window.addEventListener("load", async () => {
     }
 
     function initSmoothScroll() {
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
+        // Only target links with the 'page-scroll' class for smooth scrolling
+        document.querySelectorAll('a.page-scroll').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                const href = this.getAttribute('href');
+                const url = new URL(href, window.location.href);
+                const currentUrl = new URL(window.location.href);
+
+                // If the link points to a different page, let the browser navigate.
+                // The browser will handle going to the new page and jumping to the hash.
+                if (url.pathname !== currentUrl.pathname) {
+                    return;
+                }
+
+                // If it's an on-page link, prevent default and scroll smoothly.
                 e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) {
-                    target.scrollIntoView({ behavior: 'smooth' });
+                const targetId = url.hash;
+                const targetElement = targetId ? document.querySelector(targetId) : null;
+
+                if (targetElement) {
+                    targetElement.scrollIntoView({ behavior: 'smooth' });
                 }
             });
         });
@@ -191,11 +225,20 @@ window.addEventListener("load", async () => {
     }
 
     function initTestimonialCarousel() {
-        const slidesContainer = document.querySelector('.testimonial-slides');
-        const nextButton = document.querySelector('.carousel-btn.next');
-        const prevButton = document.querySelector('.carousel-btn.prev');
-        if (!slidesContainer || !nextButton || !prevButton) return;
+        const carousel = document.querySelector('.testimonial-carousel');
+        if (!carousel) return;
 
+        const slidesContainer = carousel.querySelector('.testimonial-slides');
+        const nextButton = carousel.querySelector('.carousel-btn.next');
+        const prevButton = carousel.querySelector('.carousel-btn.prev');
+        const dotsContainer = carousel.querySelector('.carousel-dots');
+
+        if (!slidesContainer || !nextButton || !prevButton || !dotsContainer) {
+            console.warn("Testimonial carousel is missing required elements.");
+            return;
+        }
+
+        const slidesCount = slidesContainer.children.length;
         let index = 0;
         const slides = slidesContainer.children.length;
 
@@ -208,10 +251,34 @@ window.addEventListener("load", async () => {
             index = (index - 1 + slides) % slides;
             slidesContainer.style.transform = `translateX(-${index * 100}%)`;
         });
+
+        // Create dots
+        for (let i = 0; i < slidesCount; i++) {
+            const dot = document.createElement('button');
+            dot.classList.add('carousel-dot');
+            if (i === 0) dot.classList.add('active');
+            dot.dataset.index = i;
+            dotsContainer.appendChild(dot);
+        }
+
+        const dots = dotsContainer.querySelectorAll('.carousel-dot');
+
+        const updateDots = () => {
+            dots.forEach(dot => dot.classList.remove('active'));
+            dots[index].classList.add('active');
+        };
+
+        dotsContainer.addEventListener('click', (e) => {
+            if (e.target.classList.contains('carousel-dot')) {
+                index = parseInt(e.target.dataset.index);
+                slidesContainer.style.transform = `translateX(-${index * 100}%)`;
+                updateDots();
+            }
+        });
     }
 
     function initFaqAnimation() {
-        // Handled by HTML <details> tag natively
+        // This can be enhanced, but native <details> is a good start.
     }
 
     function initMainContactForm() {
