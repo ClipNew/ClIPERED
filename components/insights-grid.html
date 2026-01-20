@@ -1,4 +1,4 @@
-<section id="blog" class="container animate">
+<section id="insights-preview" class="container animate">
     <h2 class="section-title">Insights & Demos</h2>
     <p class="section-subtitle">Explore articles, case studies, and video demos that break down the strategies for building a high-growth recruitment agency.</p>
 
@@ -57,7 +57,10 @@
         </a>
     </div>
 
-    <div style="text-align: center; margin-top: var(--spacing-lg);">
-        <a href="insights.html" class="btn btn-outline">View All Insights</a>
-    </div>
+    <!-- This button will only show on the index page, not on insights.html -->
+    <script>
+        if (window.location.pathname.endsWith('index.html') || window.location.pathname === '/') {
+            document.getElementById('insights-preview').insertAdjacentHTML('beforeend', '<div style="text-align: center; margin-top: var(--spacing-lg);"><a href="insights.html" class="btn btn-outline">View All Insights</a></div>');
+        }
+    </script>
 </section>
