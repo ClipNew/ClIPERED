@@ -28,7 +28,7 @@ window.addEventListener("load", async () => {
         const containers = document.querySelectorAll('[data-component-container]');
         
         // Use './' to ensure it looks in the folder relative to index.html
-        // GitHub Pages requires lowercase 'components' if that is your folder name
+        // GitHub Pages requires lowercase 'components' to match your folder name
         const componentBasePath = './components/'; 
 
         const fetchPromises = Array.from(containers).map(async (container) => {
@@ -43,6 +43,7 @@ window.addEventListener("load", async () => {
                 const html = await response.text();
                 container.innerHTML = html;
             } catch (error) {
+                // This displays the red error messages you were seeing
                 container.innerHTML = `<p style="color: red; text-align: center; padding: 1rem;">Error loading component: ${error.message}</p>`;
                 console.error(error);
             }
